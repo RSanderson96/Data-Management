@@ -1,0 +1,124 @@
+---
+title: "The Introduction of Video"
+author: "Rachael Sanderson"
+date: "5 November 2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+library(ProjectTemplate)
+
+```
+
+```{r load_project, include = FALSE}
+load.project()
+
+```
+
+NEED SOME FINAL CONCLUSION/POINT TO ALL OF THIS.
+# *An Evaluation of the Use of Video*
+Since the third cycle of the course, videos have been used as an educational method. The data collected has considered the video duration, total views, viewing method and viewer location amongst other factors. It is important to reflect on the use of this method, and whether there is a high uptake by students to make them a worthwhile educational tool. Awareness of this information has potential to inform whether videos are a worthwhile investment as an educational method, and so whether the use of them should be increased or decreased. 
+
+##*The data itself*
+Initially, the data was considered through 5 datasets, for each run of the course that used videos.The Video data itself is a strong dataset, with responses or quantities for all categories investigated.
+
+##*Data Preparation*
+The final dataset was constructed within a dataframe, as is seen below. Each column was selected from their respective datasets, then pulled together into a single object, with additional average and duration columns to support the analysis. 
+
+``` {R Views_Dataframe_Construction}
+#creating each column
+StepPosition = Video3$step_position #seperating columns for vectors
+V3Views = Video3$total_views
+V4Views = Video4$total_views
+V5Views = Video5$total_views
+V6Views = Video6$total_views
+V7Views = Video7$total_views
+Average = (V3Views +V4Views +V5Views +V6Views +V7Views)/5 #average over the runs
+
+#Linking the columns together within a single dataframe
+DFViews = data.frame (Step = StepPosition, Video3 = V3Views, Video4 = V4Views, Video5 = V5Views,Video6 = V6Views,Video7 = V7Views, 
+                      Duration = Video3$video_duration, Mean = Average)
+```
+
+This dataframe allowed a clear comparison across the datasets, to inform the temporal analysis of the use of videos within the educational course. the final product can be seen below:
+
+``` {R Views_Dataframe, echo = FALSE}
+DFViews
+
+```
+
+##*The Findings*
+
+The final analysis produced a ggplot of each layer, to visualise how use of the video platform has changed over time. 
+```{R Scatter}
+Graph=ggplot (data = DFViews, aes (x = Step, y= Total.Video.Views))
+g3 = Graph + geom_point(aes(x = Step, y=V3Views, colour = "Course Run 3")) #adding each course run
+g4 = g3+ geom_point (aes (x=Step, y=V4Views, colour = "Course Run 4"))
+g5 = g4+ geom_point (aes (x=Step, y=V5Views, colour = "Course Run 5")) 
+g6 = g5+ geom_point (aes (x=Step, y=V6Views, colour = "Course Run 6"))
+g7= g6+ geom_point (aes (x=Step, y=V7Views, colour = "Course Run 7"))
+
+g8 = g7 + geom_line (aes(x=Step, y=Mean, colour = "Average Views")) #adding the average line
+g9 = g8 +labs(title="Total Viewings of each Video",
+        x ="Video Step", y = "Total Views")
+g8
+```
+
+This could also be visualised as a line chart from a similar process, using geom_line instead of geom_point;
+
+```{R Line, echo = FALSE}
+Line=ggplot (data = DFViews, aes (x = Step, y= V3Views))
+L3 = Line + geom_line(aes(x = Step, y=V3Views, colour = "Course Run 3")) #adding each run
+L4 = L3+ geom_line (aes (x=Step, y=V4Views, colour = "Course Run 4"))
+L5 = L4+ geom_line (aes (x=Step, y=V5Views, colour = "Course Run 5")) 
+L6 = L5+ geom_line (aes (x=Step, y=V6Views, colour = "Course Run 6"))
+L7= L6+ geom_line (aes (x=Step, y=V7Views, colour = "Course Run 7"))
+L8 = L7 + geom_line (aes(x=Step, y= Mean, colour = "Average Views")) #adding the average line
+L8 #test
+
+```
+Alternatively, a proportional representation acknowledges the number of people who were accepted at the start of each course, to provide context to the changes;
+
+```{R Proportion}
+DFViewsProportion = data.frame (Step = StepPosition, Video3 = (V3Views/(Cohort_Summaries$Entries[3])), Video4 = V4Views/ (Cohort_Summaries$Entries[4]), Video5 = V5Views/(Cohort_Summaries$Entries[5]),Video6 = V6Views/(Cohort_Summaries$Entries[6]),Video7 = V7Views/(Cohort_Summaries$Entries[7]), 
+                      Duration = Video3$video_duration)
+
+Line=ggplot (data = DFViewsProportion, aes (x = Step, y= Video3)) #initial line coordinates
+
+L3 = Line + geom_line(aes(x = Step, y=Video3, colour = "Course Run 3")) #adding each run
+L4 = L3+ geom_line (aes (x=Step, y=Video4, colour = "Course Run 4"))
+L5 = L4+ geom_line (aes (x=Step, y=Video5, colour = "Course Run 5")) 
+L6 = L5+ geom_line (aes (x=Step, y=Video6, colour = "Course Run 6"))
+L7= L6+ geom_line (aes (x=Step, y=Video7, colour = "Course Run 7"))
+
+L7
+
+```
+This reflects no clear pattern that differs when acknowledging the number of students that start the course. 
+
+##*The Impact of Duration*
+
+```{R Video_Duration}
+Graph=ggplot (data = DFViews, aes (x = Duration, y= Total.Video.Views))
+g3 = Graph + geom_point(aes(x = Duration, y=V3Views, colour = "Course Run 3")) #adding each course run
+g4 = g3+ geom_point (aes (x=Duration, y=V4Views, colour = "Course Run 4"))
+g5 = g4+ geom_point (aes (x=Duration, y=V5Views, colour = "Course Run 5")) 
+g6 = g5+ geom_point (aes (x=Duration, y=V6Views, colour = "Course Run 6"))
+g7= g6+ geom_point (aes (x=Duration, y=V7Views, colour = "Course Run 7"))
+
+g8 = g7 + geom_line (aes(x=Duration, y=Mean, colour = "Average Views")) #adding the average line
+g9 = g8 +labs(title="Total Viewings of each Video",
+        x ="Video Duration", y = "Total Views")
+g8
+
+```
+Duration apprears to have limited impact on the number of people watching the videos, particularly when compared to the trends shown when comparing to Steps.
+
+##*Evaluation*
+What has been shown?
+Reflect on the methods
+

@@ -1,0 +1,30 @@
+---
+title: "Understanding the Data Sample"
+author: "Rachael Sanderson"
+date: "7 November 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+library(ProjectTemplate)
+
+```
+
+```{r load_project, include = FALSE}
+load.project()
+
+```
+
+#*Understanding the Data*
+
+##*Files Provided*
+
+##*Enrolements*
+
+##*Course Adjustments*
+
+##*Missing Values*
+
+##*Focus and Initial Hypotheses
