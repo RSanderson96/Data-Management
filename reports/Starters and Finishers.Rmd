@@ -82,17 +82,24 @@ CourseSP4Graph = CourseSP3Graph + geom_point (aes(x = Step, y = CourseS4$Total/(
 
 The two can be modelled as below, with exact figures (left) and proportions (right):
 
+```{R Proportion, include = FALSE}
+CourseSP5Graph = CourseSP4Graph +geom_point (aes (x= Step, y = CourseS5$Total/(Cohort_Summaries$Entries[5]), colour = "Course Run 5"))
+CourseSP6Graph = CourseSP5Graph + geom_point (aes(x = Step, y = CourseS6$Total/(Cohort_Summaries$Entries[6]), colour = "Course Run 6"))
+CourseSP7Graph = CourseSP6Graph + geom_point (aes(x = Step, y = CourseS7$Total/(Cohort_Summaries$Entries[7]), colour = "Course Run 7"))
+
+```
+
 ```{R Starter_Comparison}
 grid.arrange(CourseS7Graph, CourseSP7Graph)
 
 ```
 
-When comparing these graphs, the trends show limited differences. The trends show a gradual decline of starters at each step. DISTRIBUTION OF DECLINE? HYPOTHESIS TEST?
-
+When comparing these graphs, the trends show limited differences. The trends show a gradual decline of starters at each step. DISTRIBUTION OF DECLINE? HYPOTHESIS TEST? NEED TO NEATEN GRAPHS
 
 ###*Part Two: How many are finishing at each step?*
 
-When reflecting on analysis that focused on the starters, it was realised that there is an additional column of 'finishers'. This may be a more worthwhile factor to evaluate, as the goal of the educational programme is to have low dropout rates throughout the course. Consequentially, a data frame of finishers was produced in the same way, with the addition of a single line of code at the start:
+When reflecting on analysis that focused on the starters, it was realised that there is an additional column of 'last_completed_at'. The assumption was made that when this 'completed' column is empty, it refers to the people who *did not finish a step* and so would have not completed the course, despite starting that section. If a step has a lower number of finishers, it is potential responsible for a higher number of dropouts - something that the educational programme wants to reduce. 
+The data frame of finishers was produced in the same way as for the starters, with the addition of a single line of code at the start:
 
 ```{R Remove_Empties}
 
@@ -102,10 +109,51 @@ StepActivity = cyber.security.7.step.activity
 
 ```
 
+This code removes the rows that are empty in the "last_completed_at" to produce a data sample that only contains the people that are recorded as finishing each stage. The following graph was hence produced:
 
+```{R Finishers}
 
+Finishers = ggplot (data =CourseF3,aes (x = X, y = Total))
+#CourseF1Graph = Plot +geom_point (aes (x= Step, y = CourseF1$Total, colour = "Course Run 1"))
+#CourseF2Graph = Course1Graph + geom_point (aes(x = Step, y = CourseF2$Total, colour = "Course Run 2"))
+CourseF3Graph =Finishers +geom_point (aes (x= Step, y = CourseF3$Total, colour = "Course Run 3"))
+CourseF4Graph = CourseF3Graph + geom_point (aes(x = Step, y = CourseF4$Total, colour = "Course Run 4"))
+CourseF5Graph = CourseF4Graph +geom_point (aes (x= Step, y = CourseF5$Total, colour = "Course Run 5"))
+CourseF6Graph = CourseF5Graph + geom_point (aes(x = Step, y = CourseF6$Total, colour = "Course Run 6"))
+CourseF7Graph = CourseF6Graph + geom_point (aes(x = Step, y = CourseF7$Total, colour = "Course Run 7"))
+
+CourseF7Graph
+
+```
+Once again, it is acknowledged that the exact number of starters is a poor statistic to use for comparison of decline, as certain courses may have started with less entrants. Therefore, the Y axis was adapted to represent the number of finishers as a proportion of the number of starters;
+
+```{R Finishers_proportion}
+FinishProp = ggplot (data = CourseF3,aes (x = Step, y = Proportion_Finishers))
+CourseFP3Graph = FinishProp + geom_point (aes (x= Step, y = CourseF3$Total/CourseS3$Total, colour = "Course Run 3"))
+
+```
+The final graph produced can be seen below;
+
+```{R Finishers_Proportion_Graph, echo = FALSE}
+FinishProp = ggplot (data = CourseF3,aes (x = Step, y = Proportion_Finishers))
+#CourseFP1Graph = Plot +geom_point (aes (x= Step, y = Course1$Total, colour = "Course Run 1"))
+#CourseFP2Graph = Course1Graph + geom_point (aes(x = Step, y = Course2$Total, colour = "Course Run 2"))
+CourseFP3Graph = FinishProp + geom_point (aes (x= Step, y = CourseF3$Total/CourseS3$Total, colour = "Course Run 3"))
+CourseFP4Graph = CourseFP3Graph + geom_point (aes(x = Step, y = CourseF4$Total/CourseS4$Total, colour = "Course Run 4"))
+CourseFP5Graph = CourseFP4Graph +geom_point (aes (x= Step, y = CourseF5$Total/CourseS5$Total, colour = "Course Run 5"))
+CourseFP6Graph = CourseFP5Graph + geom_point (aes(x = Step, y = CourseF6$Total/CourseS6$Total, colour = "Course Run 6"))
+CourseFP7Graph = CourseFP6Graph + geom_point (aes(x = Step, y = CourseF7$Total/CourseS7$Total, colour = "Course Run 7"))
+
+CourseFP7Graph
+```
 ###*Part Three: Contrasting Starters and Finishers*
 
 ###*Discrepencies: What does it mean to "Finish"?*
 
+Recalling the finishers graph, an anomoly was made visible, as certain steps noticably have less finishers than a step after it, implying that 'not completing' a step may not mean completing the course; this was investigated further.
 
+```{R Show_Graph, echo = FALSE}
+CourseF7Graph
+```
+
+The graph shows limited correlation for each week, with each grouping being fairly clustered. There does not seem to be a particular *step* with a higher proportion of non-finishers throughout every run of the course, although noticably the cluster for stage 1 has a more linear trend than stages 2 and 3, implying that more people tend to drop out of the course as they are introduced to the content in the earlier stages, with the cohort settling as they are embedded in the course. 
