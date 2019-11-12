@@ -121,7 +121,7 @@ DFViews
 
 ```
 
-##* The Findings*
+##*The Findings*
 
 ###*Are people using Video?*
 
@@ -140,7 +140,7 @@ g9 = g8 +labs(title="Total Viewings of each Video",
 g8
 ```
 
-This could also be visualised as a line chart from a similar process, using geom_line instead of geom_point;
+An alternative model was to visualise as a line chart from a similar process, using geom_line instead of geom_point;
 
 ```{R Line, echo = FALSE}
 Line=ggplot (data = DFViews, aes (x = Step, y= V3Views))
@@ -153,22 +153,37 @@ L8 = L7 + geom_line (aes(x=Step, y= Mean, colour = "Average Views")) #adding the
 L8 #test
 
 ```
-Alternatively, a proportional representation acknowledges the number of people who were accepted at the start of each course, to provide context to the changes;
+Whilst this is a usful visual, the scatter is clearer to interpret, especially when the Average line is applied as a comparison. 
 
-```{R Proportion}
-DFViewsProportion = data.frame (Step = StepPosition, Video3 = (V3Views/(Cohort_Summaries$Entries[3])), Video4 = V4Views/ (Cohort_Summaries$Entries[4]), Video5 = V5Views/(Cohort_Summaries$Entries[5]),Video6 = V6Views/(Cohort_Summaries$Entries[6]),Video7 = V7Views/(Cohort_Summaries$Entries[7]), 
-                      Duration = Video3$video_duration)
+An alternative is to apply the same graphical model, but as a proportion of people that started each step, as the rate of viewers will always decrease as people drop out of the course.  Therefore, each Y value was divided by the number of people that started that specific step, to produce the following graph;
+
+```{R Proportion, echo = FALSE}
 
 Line=ggplot (data = DFViewsProportion, aes (x = Step, y= Video3)) #initial line coordinates
 
-L3 = Line + geom_line(aes(x = Step, y=Video3, colour = "Course Run 3")) #adding each run
-L4 = L3+ geom_line (aes (x=Step, y=Video4, colour = "Course Run 4"))
-L5 = L4+ geom_line (aes (x=Step, y=Video5, colour = "Course Run 5")) 
-L6 = L5+ geom_line (aes (x=Step, y=Video6, colour = "Course Run 6"))
-L7= L6+ geom_line (aes (x=Step, y=Video7, colour = "Course Run 7"))
+L3 = Line + geom_point(aes(x = Step, y=Video3, colour = "Course Run 3")) #adding each run
+L4 = L3+ geom_point (aes (x=Step, y=Video4, colour = "Course Run 4"))
+L5 = L4+ geom_point (aes (x=Step, y=Video5, colour = "Course Run 5")) 
+L6 = L5+ geom_point (aes (x=Step, y=Video6, colour = "Course Run 6"))
+L7= L6 + geom_point (aes (x=Step, y=Video7, colour = "Course Run 7"))
+L8 = L7 + geom_line (aes ( x=Step, y=DFViewsProportion$Average, colour = "Average"))
 
-L7
+L8
+
+#ADD LINES  - THE LOW X VALUES, AND THE AVERAGE Y VALUE 
+#*OR
+#LINES FOR WHEN THE QUESTIONS ARE
 
 ```
+
+The proportion allows two things to be visible. Firstly, which videos are 'dips' in the number of people that answer them. Whilst the Videos are not representative for student application to every step, they show clear peaks and troughs that could be investigated further. Additionally, the repetitive returning point of the average line to the region of 80 - 90% reflects the standard engagement of the individuals that have started the specific video step. 
+
+##*Comparing Videos to Results*
+
+###*Timescales: Videos and Questions
+ADD X LINES TO THE VIDEO PROPORTION GRAPH.
+
+###*Did Videos change the level of attainment?*
+Hypothesis test: Mean score for Course 2 vs Mean Score for Course 3/Course 7
 
 
