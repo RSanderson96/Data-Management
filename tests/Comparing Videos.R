@@ -40,8 +40,38 @@ L8 #test
 
  #considering views as a proportion of the cohort
 
-DFViewsProportion = data.frame (Step = StepPosition, Video3 = (V3Views/(Cohort_Summaries$Entries[3])), Video4 = V4Views/ (Cohort_Summaries$Entries[4]), Video5 = V5Views/(Cohort_Summaries$Entries[5]),Video6 = V6Views/(Cohort_Summaries$Entries[6]),Video7 = V7Views/(Cohort_Summaries$Entries[7]), 
-                      Duration = Video3$video_duration)
+#new data frame needed = how many people started each video step?
+
+VideoSteps = cyber.security.7.video.stats$step_position
+
+VideoStarting.function = function(x){ #x = file selected to analyse
+  
+  StepActivity = x
+  S = VideoSteps #specific steps investigated
+  L = length(S) #How many steps are there?
+  
+  #making the vector of quantities for each step
+  
+  total_values = vector() #making the vector
+  for(i in 1:L){ #for loop: L = how many steps will be assessed/length of vector
+    Step= StepActivity %>% filter(step==S[i]) #filter: collect all the rows for a single step
+    Quant = nrow(Step) #how many rows were collected?
+    total_values[i]= Quant} #compile a vector of how many people started each step
+  
+  #making the dataframe to be able to chart: Step against how many participants.
+  DFVidStart = data.frame(Step = S, Total = total_values)
+  return(DFVidStart) }
+
+VideoStart3 = VideoStarting.function (cyber.security.3.step.activity)
+VideoStart4 = VideoStarting.function (cyber.security.4.step.activity)
+VideoStart5 = VideoStarting.function (cyber.security.5.step.activity)
+VideoStart6 = VideoStarting.function (cyber.security.6.step.activity)
+VideoStart7 = VideoStarting.function (cyber.security.7.step.activity)
+  
+  
+  DFViewsProportion = data.frame (Step = StepPosition, Video3 = V3Views/VideoStart3$Total, 
+                                Video4 =  V4Views/VideoStart4$Total, Video5 = V5Views/VideoStart5$Total,
+                                Video6 = V6Views/VideoStart6$Total, Video7 = V7Views/VideoStart7$Total)
 
 Line=ggplot (data = DFViewsProportion, aes (x = Step, y= Video3)) #initial line coordinates
 
@@ -52,4 +82,5 @@ L6 = L5+ geom_line (aes (x=Step, y=Video6, colour = "Course Run 6"))
 L7= L6+ geom_line (aes (x=Step, y=Video7, colour = "Course Run 7"))
 
 L7
+
  
