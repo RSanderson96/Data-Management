@@ -1,6 +1,6 @@
 
 library(ProjectTemplate)
-load.project() ;sd[ofk]
+load.project() 
 
 Filter = StepActivity7 %>% filter(last_completed_at !="")
 StepActivityFilter=data.frame(Filter)
@@ -37,6 +37,7 @@ CourseF4 =QuantitiesFinishing.function(cyber.security.4.step.activity)
 CourseF5 =QuantitiesFinishing.function(cyber.security.5.step.activity)
 CourseF6 =QuantitiesFinishing.function(cyber.security.6.step.activity)
 CourseF7 =QuantitiesFinishing.function(cyber.security.7.step.activity)
+
 
 
 #making the first graph: How many finished each step?
