@@ -121,7 +121,9 @@ DFViews
 
 ```
 
-##*The Findings*
+##* The Findings*
+
+###*Are people using Video?*
 
 The final analysis produced a ggplot of each layer, to visualise how use of the video platform has changed over time. 
 ```{R Scatter}
@@ -168,27 +170,5 @@ L7= L6+ geom_line (aes (x=Step, y=Video7, colour = "Course Run 7"))
 L7
 
 ```
-This reflects no clear pattern that differs when acknowledging the number of students that start the course. 
 
-##*The Impact of Duration*
-
-```{R Video_Duration}
-Graph=ggplot (data = DFViews, aes (x = Duration, y= Total.Video.Views))
-g3 = Graph + geom_point(aes(x = Duration, y=V3Views, colour = "Course Run 3")) #adding each course run
-g4 = g3+ geom_point (aes (x=Duration, y=V4Views, colour = "Course Run 4"))
-g5 = g4+ geom_point (aes (x=Duration, y=V5Views, colour = "Course Run 5")) 
-g6 = g5+ geom_point (aes (x=Duration, y=V6Views, colour = "Course Run 6"))
-g7= g6+ geom_point (aes (x=Duration, y=V7Views, colour = "Course Run 7"))
-
-g8 = g7 + geom_line (aes(x=Duration, y=Mean, colour = "Average Views")) #adding the average line
-g9 = g8 +labs(title="Total Viewings of each Video",
-        x ="Video Duration", y = "Total Views")
-g8
-
-```
-Duration apprears to have limited impact on the number of people watching the videos, particularly when compared to the trends shown when comparing to Steps.
-
-##*Evaluation*
-What has been shown?
-Reflect on the methods
 
