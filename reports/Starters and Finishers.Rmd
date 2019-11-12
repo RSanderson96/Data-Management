@@ -22,14 +22,15 @@ load.project()
 # **Who is completing the course?**
 
 ##*The Intended Analysis*
-This analysis will reflect on the decline of participants within the course, reflecting when individuals are removing themselves from the online course. With this analysis, a further understanding will be gained about which elements of teaching attract the most participents, and so which elements need to be improved to maintain student participation and so overall cohort attainment. 
+This initial analysis will reflect on the decline of participants within the course, to consider which steps have the steepest decline. With this analysis, ideally a further understanding will be gained about which stages of teaching attract the most participents, and so which elements need to be improved to maintain student participation and so overall cohort attainment. 
 
 ##*The Applied Datasets*
-The dataset used was the recorded "Step Activity" for each run of the course. To allow consistany of the temporally based analysis, this was undertaken for runs 3-7 of the course, as these have identical step progressions through the course and so allow a more direct comparison. 
+The dataset used was the recorded "Step Activity" for each run of the course. For consistancy of the temporally based analysis, this was undertaken for runs 3-7 of the course, as these have identical step progressions through and so allow a more direct comparison. 
 
 ##*Data Preparation*
-The following function was applied to produce a dataset for analysis;
+The following function was applied to produce a dataset for analysis. It was applied to produce each dataframe needed within the report, with minor changes to extract the appropriate data.
 
+*Function: Making a data frame of starters*
 ```{R Function}
 QuantitiesStarting.function = function(x){ #x = file selected to analyse
   StepActivity = x
@@ -47,19 +48,20 @@ QuantitiesStarting.function = function(x){ #x = file selected to analyse
     total_values[i]= Quant} #compile a vector of how many people started each step
 
 #making the dataframe to be able to chart: Step against how many participants.
+  
 DFActivity = data.frame(Step = S, Total = total_values)
   
    return(DFActivity)} #return: the final dataframe for further analysis
    
 ```
-It was necessary to adapt the dataset to accomodate the steps 1.1 compared to 1.10 (line 3). The function then counts how many people started each step, to produce a data frame that can then be evaluated. 
+This function then counts how many people started each step, to produce a data frame that can then be evaluated. It can further be manipulated to identify the total finishers, or to divide the participants weekly, as will be demonstrated further.  
 
 ##*Analysis*
 
 ###*Part One: How many are starting at each step?*
-The first analysis was to record how many people are recorded as starting at each step, to reflect on how this declines. This was considered for each course, to consider if the trends were comparable for each run.
+The first analysis was to record how many people are recorded as starting at each step, to reflect on how this declines. This was considered for each course, to consider if the trends were comparable for each run. With an awareness that the number of enrolments varies each year, there was a realisation that this data needs to be standardised to acknowledge this. Therefore, the data was represented as a proportion. Within this process, the code as above was repeated, with the y axis instead being the Y value / number of course starters.
 
-This can be graphed as below:
+The two can be modelled as below, with exact figures (left) and proportions (right):
 
 ```{R Starters}
 
@@ -70,28 +72,23 @@ CourseS5Graph = CourseS4Graph +geom_point (aes (x= Step, y = CourseS5$Total, col
 CourseS6Graph = CourseS5Graph + geom_point (aes(x = Step, y = CourseS6$Total, colour = "Course Run 6"))
 CourseS7Graph = CourseS6Graph + geom_point (aes(x = Step, y = CourseS7$Total, colour = "Course Run 7"))
 
-CourseS7Graph
+#Alternatively, a proportion graph can be formed as below;
+
+StartProp = ggplot (data = CourseS3,aes (x = X, y = Total))
+CourseSP3Graph =StartProp +geom_point (aes (x= Step, y = CourseS3$Total/(Cohort_Summaries$Entries[3]), colour = "Course Run 3"))
+CourseSP4Graph = CourseSP3Graph + geom_point (aes(x = Step, y = CourseS4$Total/(Cohort_Summaries$Entries[4]), colour = "Course Run 4")) #.....
 
 ```
 
-With an awareness that the number of enrolments varies each year, there was a realisation that this data needs to be standardised to acknowledge this. Therefore, the data was represented as a proportion. Within this process, the code as above was repeated, with the y axis instead being the Y value / number of course starters.
+The two can be modelled as below, with exact figures (left) and proportions (right):
 
-```{R ProportionGraph, echo = FALSE}
-StartProp = ggplot (data = CourseS3,aes (x = X, y = Total))
-CourseSP3Graph =StartProp +geom_point (aes (x= Step, y = CourseS3$Total/(Cohort_Summaries$Entries[3]), colour = "Course Run 3"))
-CourseSP4Graph = CourseSP3Graph + geom_point (aes(x = Step, y = CourseS4$Total/(Cohort_Summaries$Entries[4]), colour = "Course Run 4"))
-CourseSP5Graph = CourseSP4Graph +geom_point (aes (x= Step, y = CourseS5$Total/(Cohort_Summaries$Entries[5]), colour = "Course Run 5"))
-CourseSP6Graph = CourseSP5Graph + geom_point (aes(x = Step, y = CourseS6$Total/(Cohort_Summaries$Entries[6]), colour = "Course Run 6"))
-CourseSP7Graph = CourseSP6Graph + geom_point (aes(x = Step, y = CourseS7$Total/(Cohort_Summaries$Entries[7]), colour = "Course Run 7"))
-CourseSP7Graph
+```{R Starter_Comparison}
+grid.arrange(CourseS7Graph, CourseSP7Graph)
+
 ```
 
 When comparing these graphs, the trends show limited differences. The trends show a gradual decline of starters at each step. DISTRIBUTION OF DECLINE? HYPOTHESIS TEST?
 
-```{R Thing}
-grid.arrange(CourseS7Graph, CourseSP7Graph)
-
-```
 
 ###*Part Two: How many are finishing at each step?*
 
