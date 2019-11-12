@@ -18,19 +18,15 @@ library(ProjectTemplate)
 load.project()
 
 ```
-
-# **Who is completing the course?**
-
-##*The Intended Analysis*
+#*The Intended Analysis*
 This initial analysis will reflect on the decline of participants within the course, to consider which steps have the steepest decline. With this analysis, ideally a further understanding will be gained about which stages of teaching attract the most participents, and so which elements need to be improved to maintain student participation and so overall cohort attainment. 
 
-##*The Applied Datasets*
-The dataset used was the recorded "Step Activity" for each run of the course. For consistancy of the temporally based analysis, this was undertaken for runs 3-7 of the course, as these have identical step progressions through and so allow a more direct comparison. 
+#*The Applied Datasets*
+The dataset used was the recorded "Step Activity" for each run of the course. This dataset considers of a start date and time for every participent (identified by a unique learner ID) for each step of the course. However, whilst the structure of the dataset is the same for each run of the course, the steps are different for runs 1 and 2. Therefore, for consistancy of the temporally based analysis, this stage of the analysis was only undertaken for runs 3-7 of the course, as these have identical step progressions through and so allow a more direct comparison. The goal of this stage was to investigate whether there are any repeated trends or clear divergences in the decline of individuals completing steps of the course, to support the business goal of having as many students successfully complete the course as possible. 
 
-##*Data Preparation*
-The following function was applied to produce a dataset for analysis. It was applied to produce each dataframe needed within the report, with minor changes to extract the appropriate data.
+#*Data Preparation*
+The following function was applied to the "step activity" file for each run of the course produce a dataset for analysis. Similar functions have been applied throughout the CRISP-DM process, to produce the variety of dataframes needed within the report, with adjustments made to fit the objectives of the analysis.
 
-*Function: Making a data frame of starters*
 ```{R Function}
 QuantitiesStarting.function = function(x){ #x = file selected to analyse
   StepActivity = x
@@ -44,21 +40,21 @@ QuantitiesStarting.function = function(x){ #x = file selected to analyse
   total_values = vector() #making the vector
   for(i in 1:L){ #for loop: L = how many steps will be assessed/length of vector
     Step= StepActivity %>% filter(Steps==S[i]) #filter: group the rows for a single step
-    Quant = nrow(Step) #how many rows were collected for that step?
+    Quant = nrow(Step) #how many learner IDs were collected for that step?
     total_values[i]= Quant} #compile a vector of how many people started each step
 
 #making the dataframe to be able to chart: Step against how many participants.
   
 DFActivity = data.frame(Step = S, Total = total_values)
   
-   return(DFActivity)} #return: the final dataframe for further analysis
+   return(DFActivity)} #return: the final dataframe for the submitted course run
    
 ```
-This function then counts how many people started each step, to produce a data frame that can then be evaluated. It can further be manipulated to identify the total finishers, or to divide the participants weekly, as will be demonstrated further.  
+This function then counts how many people started each step, to produce a data frame that can then be evaluated. It can further be manipulated to identify the total finishers, or the difference between these two figures, as will be demonstrated further.  
 
-##*Analysis*
+#*Analysis*
 
-###*Part One: How many are starting at each step?*
+##*Part One: How many people starting at each step?*
 The first analysis was to record how many people are recorded as starting at each step, to reflect on how this declines. This was considered for each course, to consider if the trends were comparable for each run. With an awareness that the number of enrolments varies each year, there was a realisation that this data needs to be standardised to acknowledge this. Therefore, the data was represented as a proportion. Within this process, the code as above was repeated, with the y axis instead being the Y value / number of course starters.
 
 The two can be modelled as below, with exact figures (left) and proportions (right):
@@ -71,9 +67,12 @@ CourseS4Graph = CourseS3Graph + geom_point (aes(x = Step, y = CourseS4$Total, co
 CourseS5Graph = CourseS4Graph +geom_point (aes (x= Step, y = CourseS5$Total, colour = "Course Run 5"))
 CourseS6Graph = CourseS5Graph + geom_point (aes(x = Step, y = CourseS6$Total, colour = "Course Run 6"))
 CourseS7Graph = CourseS6Graph + geom_point (aes(x = Step, y = CourseS7$Total, colour = "Course Run 7"))
+CourseS8Graph = CourseS7&Graph +labs(title="The Total Students Starting Each Step",
+        x ="Step", y = "Total Starters")
+```
+Alternatively, a graph of each quantity of starters as a proportion of the number of people enrolled on the course can be constructed:
 
-#Alternatively, a proportion graph can be formed as below;
-
+```{R ProportionGraph}
 StartProp = ggplot (data = CourseS3,aes (x = X, y = Total))
 CourseSP3Graph =StartProp +geom_point (aes (x= Step, y = CourseS3$Total/(Cohort_Summaries$Entries[3]), colour = "Course Run 3"))
 CourseSP4Graph = CourseSP3Graph + geom_point (aes(x = Step, y = CourseS4$Total/(Cohort_Summaries$Entries[4]), colour = "Course Run 4")) #.....
@@ -86,19 +85,22 @@ The two can be modelled as below, with exact figures (left) and proportions (rig
 CourseSP5Graph = CourseSP4Graph +geom_point (aes (x= Step, y = CourseS5$Total/(Cohort_Summaries$Entries[5]), colour = "Course Run 5"))
 CourseSP6Graph = CourseSP5Graph + geom_point (aes(x = Step, y = CourseS6$Total/(Cohort_Summaries$Entries[6]), colour = "Course Run 6"))
 CourseSP7Graph = CourseSP6Graph + geom_point (aes(x = Step, y = CourseS7$Total/(Cohort_Summaries$Entries[7]), colour = "Course Run 7"))
+CourseSP8Graph = CourseSP7&Graph +labs(title="Proportion of Enrolled Students Starting Each Step",
+        x ="Step", y = "Proportion of Starters")
 
 ```
 
 ```{R Starter_Comparison}
-grid.arrange(CourseS7Graph, CourseSP7Graph)
+grid.arrange(CourseS8Graph, CourseSP8Graph)
 
 ```
 
-When comparing these graphs, the trends show limited differences. The trends show a gradual decline of starters at each step. DISTRIBUTION OF DECLINE? HYPOTHESIS TEST? NEED TO NEATEN GRAPHS
+When comparing these graphs, the trends are very similar, with a gradual decline in starters at each step, and a gradual slowing of this decline as the steps progress. However, the selection of this data makes the model flawed; just because an individual started a step, does not mean that they completed it, therefore this analyisis cannot sufficiently meet the objectives of the exploration. 
 
-###*Part Two: How many are finishing at each step?*
 
-When reflecting on analysis that focused on the starters, it was realised that there is an additional column of 'last_completed_at'. The assumption was made that when this 'completed' column is empty, it refers to the people who *did not finish a step* and so would have not completed the course, despite starting that section. If a step has a lower number of finishers, it is potential responsible for a higher number of dropouts - something that the educational programme wants to reduce. 
+##*Part Two: How many are finishing at each step?*
+
+The data was re-examined to consider the additional column of 'last_completed_at'. The assumption was made that when this 'completed' column is empty, it refers to the people who *did not finish a step* and so would have not completed the course, despite starting that section. If a step has a lower number of finishers, it is potential responsible for a higher number of dropouts - something that the educational programme wants to reduce. 
 The data frame of finishers was produced in the same way as for the starters, with the addition of a single line of code at the start:
 
 ```{R Remove_Empties}
@@ -114,22 +116,23 @@ This code removes the rows that are empty in the "last_completed_at" to produce 
 ```{R Finishers}
 
 Finishers = ggplot (data =CourseF3,aes (x = X, y = Total))
-#CourseF1Graph = Plot +geom_point (aes (x= Step, y = CourseF1$Total, colour = "Course Run 1"))
-#CourseF2Graph = Course1Graph + geom_point (aes(x = Step, y = CourseF2$Total, colour = "Course Run 2"))
 CourseF3Graph =Finishers +geom_point (aes (x= Step, y = CourseF3$Total, colour = "Course Run 3"))
 CourseF4Graph = CourseF3Graph + geom_point (aes(x = Step, y = CourseF4$Total, colour = "Course Run 4"))
 CourseF5Graph = CourseF4Graph +geom_point (aes (x= Step, y = CourseF5$Total, colour = "Course Run 5"))
 CourseF6Graph = CourseF5Graph + geom_point (aes(x = Step, y = CourseF6$Total, colour = "Course Run 6"))
 CourseF7Graph = CourseF6Graph + geom_point (aes(x = Step, y = CourseF7$Total, colour = "Course Run 7"))
+CourseF8Graph = CourseF7&Graph +labs(title="Total Number of Students Finishing Each Step",
+        x ="Step", y = "Total Finishers")
 
-CourseF7Graph
+CourseF8Graph
 
 ```
-Once again, it is acknowledged that the exact number of starters is a poor statistic to use for comparison of decline, as certain courses may have started with less entrants. Therefore, the Y axis was adapted to represent the number of finishers as a proportion of the number of starters;
+
+However, this model is of limited benefit to the analysis, as it fails to consider the impact of varying enrolement levels for each year. To negate this, the Y axis was adapted to represent the number of finishers as a proportion of the number of starters, dividing the finishing total by the starting total;
 
 ```{R Finishers_proportion}
-FinishProp = ggplot (data = CourseF3,aes (x = Step, y = Proportion_Finishers))
-CourseFP3Graph = FinishProp + geom_point (aes (x= Step, y = CourseF3$Total/CourseS3$Total, colour = "Course Run 3"))
+FinishProp = ggplot (data = CourseF3,aes (x = Step, y = Proportion_Finishers)) #outlining graph parameters
+CourseFP3Graph = FinishProp + geom_point (aes (x= Step, y = CourseF3$Total/CourseS3$Total, colour = "Course Run 3")) #adding each layer as previously - conntinue until CourseFP8
 
 ```
 The final graph produced can be seen below;
@@ -143,13 +146,15 @@ CourseFP4Graph = CourseFP3Graph + geom_point (aes(x = Step, y = CourseF4$Total/C
 CourseFP5Graph = CourseFP4Graph +geom_point (aes (x= Step, y = CourseF5$Total/CourseS5$Total, colour = "Course Run 5"))
 CourseFP6Graph = CourseFP5Graph + geom_point (aes(x = Step, y = CourseF6$Total/CourseS6$Total, colour = "Course Run 6"))
 CourseFP7Graph = CourseFP6Graph + geom_point (aes(x = Step, y = CourseF7$Total/CourseS7$Total, colour = "Course Run 7"))
+CourseFP8Graph = CourseFP7&Graph +labs(title="Proportion of Enrolled Students Finishing Each Step",
+        x ="Step", y = "Proportion of Finishers")
 
-CourseFP7Graph
+CourseFP8Graph
 ```
 
-The graph shows limited correlation for each week, with each grouping being fairly clustered. There does not seem to be a particular *step* with a higher proportion of non-finishers throughout every run of the course, although noticably the cluster for stage 1 has a more linear trend than stages 2 and 3, implying that more people tend to drop out of the course as they are introduced to the content in the earlier stages, with the cohort settling as they are embedded in the course. In reflecting on the difference in the chart when the proportion of finishers is considered, the analysis led to the consideration of both starters and finishers.
+The graph shows limited correlation for each week, with each grouping being fairly clustered. There does not seem to be a particular step with a higher proportion of non-finishers throughout every run of the course, although noticably the cluster for stage 1 has a more linear trend than stages 2 and 3, implying that more people tend to leave a step incomplete when they are first introduced to the content in the earlier stages, with the cohort settling as they are embedded in the course. The model itself is clear and so easy to read, with the proportion suitably allowing for variations in sample size. In reflecting on the difference in the chart when the proportion of finishers is considered, the analysis led to the consideration of both starters and finishers. 
 
-###*Part Three: Contrasting Starters and Finishers*
+##*Part Three: Contrasting Starters and Finishers*
 The analysis focused on the difference between the two columns, and so began with the following data frame;
 
 ```{R Difference_DF}
@@ -163,7 +168,7 @@ DifferenceDF = data.frame(Step = CourseS3$Step,
 
 To plot the following graph;
 
-```{R Difference_Graph}
+```{R Difference_Graph, echo = FALSE}
 
 D= ggplot (data=DifferenceDF, aes (x=Step, y=Difference))
 D3 = D + geom_point(aes(x=Step, y= Difference3, colour = "Course Run3"))
@@ -171,12 +176,14 @@ D4 = D3 + geom_point(aes(x=Step, y= Difference4, colour = "Course Run4"))
 D5 = D4 + geom_point(aes(x=Step, y= Difference5, colour = "Course Run5"))
 D6 = D5 + geom_point(aes(x=Step, y= Difference6, colour = "Course Run6"))
 D7 = D6 + geom_point(aes(x=Step, y= Difference7, colour = "Course Run7"))
+D8 = D7 +labs(title="Number of Non-Finishers at each step",
+        x ="Step", y = "Non-Finishers")
 
-D7
+D8
 
 ```
 
-To adjust the graph, the difference between the two was calculated as a % of the number of starters:
+The previous analysis stage showed the benefits of including information about the number of starters, so the graph was adjusted to show proportions accordingly;
 
 ```{R Diff_Percentage, echo = FALSE}
 DifferencePercentDF = data.frame(Step = CourseS3$Step, 
@@ -192,13 +199,15 @@ DP4 = DP3 + geom_point(aes(x=Step, y= DifferenceP4, colour = "Course Run4"))
 DP5 = DP4 + geom_point(aes(x=Step, y= DifferenceP5, colour = "Course Run5"))
 DP6 = DP5 + geom_point(aes(x=Step, y= DifferenceP6, colour = "Course Run6"))
 DP7 = DP6 + geom_point(aes(x=Step, y= DifferenceP7, colour = "Course Run7"))
+DP8 = DP7 +labs(title="Proportion of Non-Finishers at each step",
+        x ="Step", y = "Proportion of Non-Finishers")
 
-DiffPercent = DP7
+DiffPercent = DP8
 
 DiffPercent
 ```
 
-The graph of the percentages reflects a similar scatter to the number of finishers, however as a visualisation it is more effective. The difference calculated is the number of people that do not finish a step: this is the quantity that the educational provider wishes to reduce. However, in this graph the higher values are the ones that demand attention as the steps with the largest proportion of students dropping out. Therefore, as a final model to reflect on the proportion of students that do not complete each step, it is the most useful. 
+The graph of the percentages reflects a similar scatter to the number of finishers, which implies consistancy in the methods used to produce the models. However as a visualisation it is more effective. The difference calculated is the number of people that do not finish a step: this is the quantity that the educational provider wishes to reduce, hence meeting the business goals. However, in this graph the higher values are the ones that demand attention as the steps with the largest proportion of students dropping out. Therefore, as a final model to reflect on the proportion of students that do not complete each step, it is the most useful. 
 
 ###*Discrepencies: What does it mean to "Finish"?*
 
