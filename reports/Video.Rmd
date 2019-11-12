@@ -1,5 +1,5 @@
 ---
-title: "The Introduction of Video"
+title: "A Consideration of Attainment"
 author: "Rachael Sanderson"
 date: "5 November 2019"
 output:
@@ -19,8 +19,11 @@ load.project()
 
 ```
 
-NEED SOME FINAL CONCLUSION/POINT TO ALL OF THIS.
-# *An Evaluation of the Use of Video*
+So far, this analysis has focused purely on plotting the trend of 'dropping out'. However, when considering the rate of individuals leaving the course, it does not consider the attainment of the individuals that remain in the course. This section will deliberately focus on this aspect, with a particular emphasis on the impact of taching methods (specifically videos) on the attainment of these individuals.
+
+##*Measuring Attainment*
+
+
 Since the third cycle of the course, videos have been used as an educational method. The data collected has considered the video duration, total views, viewing method and viewer location amongst other factors. It is important to reflect on the use of this method, and whether there is a high uptake by students to make them a worthwhile educational tool. Awareness of this information has potential to inform whether videos are a worthwhile investment as an educational method, and so whether the use of them should be increased or decreased. 
 
 ##*The data itself*
