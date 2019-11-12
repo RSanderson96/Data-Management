@@ -68,10 +68,10 @@ VideoStart5 = VideoStarting.function (cyber.security.5.step.activity)
 VideoStart6 = VideoStarting.function (cyber.security.6.step.activity)
 VideoStart7 = VideoStarting.function (cyber.security.7.step.activity)
   
-  
-  DFViewsProportion = data.frame (Step = StepPosition, Video3 = V3Views/VideoStart3$Total, 
+DFViewsProportion = data.frame (Step = StepPosition, Video3 = V3Views/VideoStart3$Total, 
                                 Video4 =  V4Views/VideoStart4$Total, Video5 = V5Views/VideoStart5$Total,
                                 Video6 = V6Views/VideoStart6$Total, Video7 = V7Views/VideoStart7$Total)
+cache("DFViewsProportion")
 
 Line=ggplot (data = DFViewsProportion, aes (x = Step, y= Video3)) #initial line coordinates
 
