@@ -146,14 +146,68 @@ CourseFP7Graph = CourseFP6Graph + geom_point (aes(x = Step, y = CourseF7$Total/C
 
 CourseFP7Graph
 ```
+
+The graph shows limited correlation for each week, with each grouping being fairly clustered. There does not seem to be a particular *step* with a higher proportion of non-finishers throughout every run of the course, although noticably the cluster for stage 1 has a more linear trend than stages 2 and 3, implying that more people tend to drop out of the course as they are introduced to the content in the earlier stages, with the cohort settling as they are embedded in the course. In reflecting on the difference in the chart when the proportion of finishers is considered, the analysis led to the consideration of both starters and finishers.
+
 ###*Part Three: Contrasting Starters and Finishers*
+The analysis focused on the difference between the two columns, and so began with the following data frame;
+
+```{R Difference_DF}
+DifferenceDF = data.frame(Step = CourseS3$Step, 
+                          Difference3 = (CourseS3$Total-CourseF3$Total),
+                          Difference4 = (CourseS4$Total-CourseF4$Total),
+                          Difference5 = (CourseS5$Total-CourseF5$Total),
+                          Difference6 = (CourseS6$Total-CourseF6$Total),
+                          Difference7 = (CourseS7$Total-CourseF7$Total))
+```
+
+To plot the following graph;
+
+```{R Difference_Graph}
+
+D= ggplot (data=DifferenceDF, aes (x=Step, y=Difference))
+D3 = D + geom_point(aes(x=Step, y= Difference3, colour = "Course Run3"))
+D4 = D3 + geom_point(aes(x=Step, y= Difference4, colour = "Course Run4"))
+D5 = D4 + geom_point(aes(x=Step, y= Difference5, colour = "Course Run5"))
+D6 = D5 + geom_point(aes(x=Step, y= Difference6, colour = "Course Run6"))
+D7 = D6 + geom_point(aes(x=Step, y= Difference7, colour = "Course Run7"))
+
+D7
+
+```
+
+To adjust the graph, the difference between the two was calculated as a % of the number of starters:
+
+```{R Diff_Percentage, echo = FALSE}
+DifferencePercentDF = data.frame(Step = CourseS3$Step, 
+                          DifferenceP3 = (((CourseS3$Total-CourseF3$Total)/CourseS3$Total)*100),
+                          DifferenceP4 = (((CourseS4$Total-CourseF4$Total)/CourseS4$Total)*100),
+                          DifferenceP5 = (((CourseS5$Total-CourseF5$Total)/CourseS5$Total)*100),
+                          DifferenceP6 = (((CourseS6$Total-CourseF6$Total)/CourseS6$Total)*100),
+                          DifferenceP7 = (((CourseS7$Total-CourseF7$Total)/CourseS7$Total)*100))
+
+D= ggplot (data=DifferencePercentDF, aes (x=Step, y=Difference))
+DP3 = D + geom_point(aes(x=Step, y= DifferenceP3, colour = "Course Run3"))
+DP4 = DP3 + geom_point(aes(x=Step, y= DifferenceP4, colour = "Course Run4"))
+DP5 = DP4 + geom_point(aes(x=Step, y= DifferenceP5, colour = "Course Run5"))
+DP6 = DP5 + geom_point(aes(x=Step, y= DifferenceP6, colour = "Course Run6"))
+DP7 = DP6 + geom_point(aes(x=Step, y= DifferenceP7, colour = "Course Run7"))
+
+DiffPercent = DP7
+
+DiffPercent
+```
+
+The graph of the percentages reflects a similar scatter to the number of finishers, however as a visualisation it is more effective. The difference calculated is the number of people that do not finish a step: this is the quantity that the educational provider wishes to reduce. However, in this graph the higher values are the ones that demand attention as the steps with the largest proportion of students dropping out. Therefore, as a final model to reflect on the proportion of students that do not complete each step, it is the most useful. 
 
 ###*Discrepencies: What does it mean to "Finish"?*
 
-Recalling the finishers graph, an anomoly was made visible, as certain steps noticably have less finishers than a step after it, implying that 'not completing' a step may not mean completing the course; this was investigated further.
+Returning to the finishers graph (see below), an anomoly was revealed, as certain steps noticably have less finishers than a step after it, implying that 'not completing' a step may not mean completing the course; this was investigated further.
 
 ```{R Show_Graph, echo = FALSE}
 CourseF7Graph
 ```
 
-The graph shows limited correlation for each week, with each grouping being fairly clustered. There does not seem to be a particular *step* with a higher proportion of non-finishers throughout every run of the course, although noticably the cluster for stage 1 has a more linear trend than stages 2 and 3, implying that more people tend to drop out of the course as they are introduced to the content in the earlier stages, with the cohort settling as they are embedded in the course. 
+
+
+
