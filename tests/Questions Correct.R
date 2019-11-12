@@ -1,6 +1,7 @@
 #How many Questions are answered correctly?
 
 
+
 #Questions file used as the most visible assessment of attainment: are the students improving?
 library(ProjectTemplate)
 load.project()
@@ -33,6 +34,7 @@ Average = (Correct1+Correct2+Correct3+Correct4+Correct5+Correct6+Correct7)/7
 
 CorrectDF = data.frame(Question = Q, Average = Average,
                        Course1 = Correct1, Course2 = Correct2, Course3 = Correct3, Course4 = Correct4, Course5 = Correct5, Course6=Correct6, Course7=Correct7)
+cache("CorrectDF")
 
 Correct = ggplot(data=CorrectDF, x=Question, Y = Correct_Answers)
 C1 = Correct + geom_point(aes(x=Question, y=Course1, colour = "Course1"))
@@ -53,7 +55,4 @@ boxplot(CorrectDF$Course1, CorrectDF$Course2, CorrectDF$Course3, CorrectDF$Cours
         
 
        
-       
-      
-)
 
