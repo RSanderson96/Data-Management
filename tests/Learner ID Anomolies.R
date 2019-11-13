@@ -42,17 +42,31 @@ Single5 = SingleUnfinish.Function(cyber.security.5.step.activity)
 Single6 = SingleUnfinish.Function(cyber.security.6.step.activity)
 Single7 = SingleUnfinish.Function(cyber.security.7.step.activity)
 
+LargeDF = merge.data.frame(Single1, Single2, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_1 = n.x, Run_2 = n.y )
+LargeDF = merge.data.frame(LargeDF, Single3, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_3 = n)
+LargeDF = merge.data.frame(LargeDF, Single4, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_4 = n)
+LargeDF = merge.data.frame(LargeDF, Single5, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_5 = n)
+LargeDF = merge.data.frame(LargeDF, Single6, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_6 = n)
+LargeDF = merge.data.frame(LargeDF, Single7, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_7 = n)
 
-U = ggplot(data = Single2, aes(x = Step, y=Total))
+
+
+U1 = ggplot(data = Single2, aes(x = Step, y=Total))
 U1 = U + geom_point (aes(x = Step, y=Single1$n, colour = "Course1"))
 U2 = U1 + geom_point (aes(x = Step, y=Single2$n, colour = "Course2"))
 U3 = U2 + geom_point (aes(x = Step, y=Single3$n, colour = "Course3"))
 U4 = U3 + geom_point (aes(x = Step, y=Single4$n, colour = "Course4"))
-U5 = U4 + geom_point (aes(x = Step, y=Single5$n, colour = "Course5"))
+U5 = U2 + geom_point (aes(x = Step, y=Single5$n, colour = "Course5"))
 U6 = U5 + geom_point (aes(x = Step, y=Single6$n, colour = "Course6"))
 U7 = U6 + geom_point (aes(x = Step, y=Single7$n, colour = "Course7"))
 
-U7
+U5
 
 
 
