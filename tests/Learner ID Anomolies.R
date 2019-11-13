@@ -11,9 +11,12 @@ IncompleteDF = data.frame(Course1 = nrow(Incomplete_Quantity1),Course2 = nrow(In
                           Course5 = nrow(Incomplete_Quantity5),Course6 = nrow(Incomplete_Quantity6),
                           Course7 = nrow(Incomplete_Quantity7))
 
-#flaw in leaving responses - only a survey, not actual leavers.
 
-#for each learner ID with only one not finished, what was that step?
+
+#flaw in leaving responses - only a survey, not actual leavers.
+Responses_match7= cyber.security.7.leaving.survey.responses %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+
+#1)for each learner ID with only one not finished, what was that step?
 
  SingleUnfinish.Function=function(x){
    StepActivity = x
@@ -56,18 +59,18 @@ LargeDF = merge.data.frame(LargeDF, Single7, by = "Step", all=TRUE)
 LargeDF = LargeDF%>% rename(Run_7 = n)
 
 
+U = ggplot(data = LargeDF, aes(x = Step, y=Total))
+U1 = U + geom_point (aes(x = Step, y=Run_1, colour = "Course1"))
+U2 = U1 + geom_point (aes(x = Step, y=Run_2, colour = "Course2"))
+U3 = U2 + geom_point (aes(x = Step, y=Run_3, colour = "Course3"))
+U4 = U3 + geom_point (aes(x = Step, y=Run_4, colour = "Course4"))
+U5 = U4 + geom_point (aes(x = Step, y=Run_5, colour = "Course5"))
+U6 = U5 + geom_point (aes(x = Step, y=Run_6, colour = "Course6"))
+U7 = U6 + geom_point (aes(x = Step, y=Run_7, colour = "Course7"))
 
-U1 = ggplot(data = Single2, aes(x = Step, y=Total))
-U1 = U + geom_point (aes(x = Step, y=Single1$n, colour = "Course1"))
-U2 = U1 + geom_point (aes(x = Step, y=Single2$n, colour = "Course2"))
-U3 = U2 + geom_point (aes(x = Step, y=Single3$n, colour = "Course3"))
-U4 = U3 + geom_point (aes(x = Step, y=Single4$n, colour = "Course4"))
-U5 = U2 + geom_point (aes(x = Step, y=Single5$n, colour = "Course5"))
-U6 = U5 + geom_point (aes(x = Step, y=Single6$n, colour = "Course6"))
-U7 = U6 + geom_point (aes(x = Step, y=Single7$n, colour = "Course7"))
+U7
 
-U5
-
+#See number that drop at the start
 
 
 
