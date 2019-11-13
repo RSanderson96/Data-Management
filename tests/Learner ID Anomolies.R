@@ -15,12 +15,6 @@ IncompleteDF = data.frame(Course1 = nrow(Incomplete_Quantity1),Course2 = nrow(In
 
 #for each learner ID with only one not finished, what was that step?
 
-
- 
- U = ggplot(data = UnfinishedSteps, aes(x = Step, y=Total))
- U1 = U + geom_point (aes(x = Step, y=UnfinishedSteps$n, colour = "Course7"))
- U1
- 
  SingleUnfinish.Function=function(x){
    StepActivity = x
    Incomplete_Quantity= StepActivity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
@@ -47,6 +41,18 @@ Single4 = SingleUnfinish.Function(cyber.security.4.step.activity)
 Single5 = SingleUnfinish.Function(cyber.security.5.step.activity)
 Single6 = SingleUnfinish.Function(cyber.security.6.step.activity)
 Single7 = SingleUnfinish.Function(cyber.security.7.step.activity)
+
+
+U = ggplot(data = Single2, aes(x = Step, y=Total))
+U1 = U + geom_point (aes(x = Step, y=Single1$n, colour = "Course1"))
+U2 = U1 + geom_point (aes(x = Step, y=Single2$n, colour = "Course2"))
+U3 = U2 + geom_point (aes(x = Step, y=Single3$n, colour = "Course3"))
+U4 = U3 + geom_point (aes(x = Step, y=Single4$n, colour = "Course4"))
+U5 = U4 + geom_point (aes(x = Step, y=Single5$n, colour = "Course5"))
+U6 = U5 + geom_point (aes(x = Step, y=Single6$n, colour = "Course6"))
+U7 = U6 + geom_point (aes(x = Step, y=Single7$n, colour = "Course7"))
+
+U7
 
 
 
