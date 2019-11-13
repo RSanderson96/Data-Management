@@ -5,6 +5,12 @@ load.project()
 
 #1a)How many times per learner?
 
+Incomplete_Quantity1= cyber.security.1.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity2= cyber.security.2.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity3= cyber.security.3.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity4= cyber.security.4.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity5= cyber.security.5.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity6= cyber.security.6.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
 Incomplete_Quantity7= cyber.security.7.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
 IncompleteDF = data.frame(Course1 = nrow(Incomplete_Quantity1),Course2 = nrow(Incomplete_Quantity2),
                           Course3 = nrow(Incomplete_Quantity3),Course4 = nrow(Incomplete_Quantity4),
@@ -15,6 +21,11 @@ IncompleteDF = data.frame(Course1 = nrow(Incomplete_Quantity1),Course2 = nrow(In
 
 #flaw in leaving responses - only a survey, not actual leavers.
 Responses_match7= cyber.security.7.leaving.survey.responses %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+
+
+
+
+
 
 #1)for each learner ID with only one not finished, what was that step?
 
@@ -45,6 +56,15 @@ Single5 = SingleUnfinish.Function(cyber.security.5.step.activity)
 Single6 = SingleUnfinish.Function(cyber.security.6.step.activity)
 Single7 = SingleUnfinish.Function(cyber.security.7.step.activity)
 
+
+cache("Single1")
+cache("Single2")
+cache("Single3")
+cache("Single4")
+cache("Single5")
+cache("Single6")
+cache("Single7")
+
 LargeDF = merge.data.frame(Single1, Single2, by = "Step", all=TRUE)
 LargeDF = LargeDF%>% rename(Run_1 = n.x, Run_2 = n.y )
 LargeDF = merge.data.frame(LargeDF, Single3, by = "Step", all=TRUE)
@@ -71,7 +91,6 @@ U7 = U6 + geom_point (aes(x = Step, y=Run_7, colour = "Course7"))
 U7
 
 #See number that drop at the start
-
 
 
 
