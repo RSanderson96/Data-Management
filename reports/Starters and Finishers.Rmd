@@ -60,15 +60,15 @@ The first analysis was to record how many people are recorded as starting at eac
 The two can be modelled as below, with exact figures (left) and proportions (right):
 
 ```{R Starters}
-
-Plot = ggplot (data =CourseS3,aes (x = X, y = Total))
+Plot = ggplot (data = CourseS3,aes (x = X, y = Total))
 CourseS3Graph =Plot +geom_point (aes (x= Step, y = CourseS3$Total, colour = "Course Run 3"))
 CourseS4Graph = CourseS3Graph + geom_point (aes(x = Step, y = CourseS4$Total, colour = "Course Run 4"))
 CourseS5Graph = CourseS4Graph +geom_point (aes (x= Step, y = CourseS5$Total, colour = "Course Run 5"))
 CourseS6Graph = CourseS5Graph + geom_point (aes(x = Step, y = CourseS6$Total, colour = "Course Run 6"))
 CourseS7Graph = CourseS6Graph + geom_point (aes(x = Step, y = CourseS7$Total, colour = "Course Run 7"))
-CourseS8Graph = CourseS7&Graph +labs(title="The Total Students Starting Each Step",
+CourseS8Graph = CourseS7Graph +labs(title="The Total Students Starting Each Step",
         x ="Step", y = "Total Starters")
+CourseS8Graph
 ```
 Alternatively, a graph of each quantity of starters as a proportion of the number of people enrolled on the course can be constructed:
 
@@ -85,7 +85,7 @@ The two can be modelled as below, with exact figures (left) and proportions (rig
 CourseSP5Graph = CourseSP4Graph +geom_point (aes (x= Step, y = CourseS5$Total/(Cohort_Summaries$Entries[5]), colour = "Course Run 5"))
 CourseSP6Graph = CourseSP5Graph + geom_point (aes(x = Step, y = CourseS6$Total/(Cohort_Summaries$Entries[6]), colour = "Course Run 6"))
 CourseSP7Graph = CourseSP6Graph + geom_point (aes(x = Step, y = CourseS7$Total/(Cohort_Summaries$Entries[7]), colour = "Course Run 7"))
-CourseSP8Graph = CourseSP7&Graph +labs(title="Proportion of Enrolled Students Starting Each Step",
+CourseSP8Graph = CourseSP7Graph +labs(title="Proportion of Enrolled Students Starting Each Step",
         x ="Step", y = "Proportion of Starters")
 
 ```
@@ -121,7 +121,7 @@ CourseF4Graph = CourseF3Graph + geom_point (aes(x = Step, y = CourseF4$Total, co
 CourseF5Graph = CourseF4Graph +geom_point (aes (x= Step, y = CourseF5$Total, colour = "Course Run 5"))
 CourseF6Graph = CourseF5Graph + geom_point (aes(x = Step, y = CourseF6$Total, colour = "Course Run 6"))
 CourseF7Graph = CourseF6Graph + geom_point (aes(x = Step, y = CourseF7$Total, colour = "Course Run 7"))
-CourseF8Graph = CourseF7&Graph +labs(title="Total Number of Students Finishing Each Step",
+CourseF8Graph = CourseF7Graph +labs(title="Total Number of Students Finishing Each Step",
         x ="Step", y = "Total Finishers")
 
 CourseF8Graph
@@ -146,7 +146,7 @@ CourseFP4Graph = CourseFP3Graph + geom_point (aes(x = Step, y = CourseF4$Total/C
 CourseFP5Graph = CourseFP4Graph +geom_point (aes (x= Step, y = CourseF5$Total/CourseS5$Total, colour = "Course Run 5"))
 CourseFP6Graph = CourseFP5Graph + geom_point (aes(x = Step, y = CourseF6$Total/CourseS6$Total, colour = "Course Run 6"))
 CourseFP7Graph = CourseFP6Graph + geom_point (aes(x = Step, y = CourseF7$Total/CourseS7$Total, colour = "Course Run 7"))
-CourseFP8Graph = CourseFP7&Graph +labs(title="Proportion of Enrolled Students Finishing Each Step",
+CourseFP8Graph = CourseFP7Graph +labs(title="Proportion of Enrolled Students Finishing Each Step",
         x ="Step", y = "Proportion of Finishers")
 
 CourseFP8Graph
@@ -211,7 +211,7 @@ The graph of the percentages reflects a similar scatter to the number of finishe
 
 ###*Discrepencies: What does it mean to "Finish"?*
 
-Returning to the finishers graph (see below), an anomoly was revealed, as certain steps noticably have less finishers than a step after it, implying that 'not completing' a step may not mean completing the course; this was investigated further.
+Returning to the finishers graph (see below), an anomoly was revealed, as certain steps noticably have less finishers than a step after it, implying that 'not completing' a step may not mean completing the course; this was investigated further in the next stage of the analysis.
 
 ```{R Show_Graph, echo = FALSE}
 CourseF7Graph
