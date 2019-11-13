@@ -35,3 +35,25 @@ New #dataframe = includes number of unfinished steps for each learner ID
 
 
 Answers= cyber.security.7.question.response %>% filter(correct == "true") %>% count(learner_id) %>% arrange(-n)
+Attempts =cyber.security.7.question.response %>% count(learner_id) %>% arrange(-n)
+Unfinished = data.frame(learner_id = New$learner_id, Unfinished = New$n)
+Unfinished = unique.data.frame(Unfinished)
+
+UnfinishedQuestions = merge(Unfinished,Answers, by = "learner_id", all = TRUE)
+UnfinishedQuestions = UnfinishedQuestions%>% rename(Correct_Answers = n)
+UnfinishedQuestions = merge(UnfinishedQuestions,Attempts, by = "learner_id", all = TRUE)
+UnfinishedQuestions = UnfinishedQuestions%>% rename(Quant_Attempts = n)
+
+ProportionCorrect = (UnfinishedQuestions$Correct_Answers/UnfinishedQuestions$Quant_Attempts)*100
+
+UnfinishedQuestions = cbind(UnfinishedQuestions, ProportionCorrect)
+
+UnfinishedQuestions<-UnfinishedQuestions[,-c(5)]
+
+T = ggplot(data = UnfinishedQuestions, aes(x = Unfinished, y = Proportion_Correct))
+T1 = T + geom_point(aes(x = Unfinished, y = ProportionCorrect))
+
+T1
+
+
+
