@@ -1,4 +1,5 @@
-Video3= read.csv("cyber-security-3_video-stats.csv")
+library(ProjectTemplate)
+load.project() 
 
 
 StepPosition = Video3$step_position #seperating columns for vectors
@@ -67,20 +68,31 @@ VideoStart4 = VideoStarting.function (cyber.security.4.step.activity)
 VideoStart5 = VideoStarting.function (cyber.security.5.step.activity)
 VideoStart6 = VideoStarting.function (cyber.security.6.step.activity)
 VideoStart7 = VideoStarting.function (cyber.security.7.step.activity)
-  
-DFViewsProportion = data.frame (Step = StepPosition, Video3 = V3Views/VideoStart3$Total, 
-                                Video4 =  V4Views/VideoStart4$Total, Video5 = V5Views/VideoStart5$Total,
-                                Video6 = V6Views/VideoStart6$Total, Video7 = V7Views/VideoStart7$Total)
+
+
+PropVideo3 = V3Views/VideoStart3$Total
+PropVideo4 =  V4Views/VideoStart4$Total
+PropVideo5 = V5Views/VideoStart5$Total
+PropVideo6 = V6Views/VideoStart6$Total
+PropVideo7 = V7Views/VideoStart7$Total
+Average = (PropVideo3+PropVideo4+PropVideo5+PropVideo6+PropVideo7)/5
+
+DFViewsProportion = data.frame(Step = VideoSteps,Video3 = PropVideo3, Video4 = PropVideo4,
+                               Video5 = PropVideo5, Video6 = PropVideo6,
+                               Video7 = PropVideo7, Average = Average)
+
+
 cache("DFViewsProportion")
 
 Line=ggplot (data = DFViewsProportion, aes (x = Step, y= Video3)) #initial line coordinates
 
-L3 = Line + geom_line(aes(x = Step, y=Video3, colour = "Course Run 3")) #adding each run
-L4 = L3+ geom_line (aes (x=Step, y=Video4, colour = "Course Run 4"))
-L5 = L4+ geom_line (aes (x=Step, y=Video5, colour = "Course Run 5")) 
-L6 = L5+ geom_line (aes (x=Step, y=Video6, colour = "Course Run 6"))
-L7= L6+ geom_line (aes (x=Step, y=Video7, colour = "Course Run 7"))
+L3 = Line + geom_point(aes(x = Step, y=Video3, colour = "Course Run 3")) #adding each run
+L4 = L3+ geom_point (aes (x=Step, y=Video4, colour = "Course Run 4"))
+L5 = L4+ geom_point (aes (x=Step, y=Video5, colour = "Course Run 5")) 
+L6 = L5+ geom_point (aes (x=Step, y=Video6, colour = "Course Run 6"))
+L7= L6 + geom_point (aes (x=Step, y=Video7, colour = "Course Run 7"))
+L8 = L7 + geom_line (aes ( x=Step, y=DFViewsProportion$Average, colour = "Average"))
 
-L7
+L8
 
  
