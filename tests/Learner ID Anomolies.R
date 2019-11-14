@@ -78,6 +78,9 @@ LargeDF = LargeDF%>% rename(Run_6 = n)
 LargeDF = merge.data.frame(LargeDF, Single7, by = "Step", all=TRUE)
 LargeDF = LargeDF%>% rename(Run_7 = n)
 
+LargeDF[is.na(LargeDF)] <- 0
+cache("LargeDF")
+
 
 U = ggplot(data = LargeDF, aes(x = Step, y=Total))
 U1 = U + geom_point (aes(x = Step, y=Run_1, colour = "Course1"))
