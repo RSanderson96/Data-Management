@@ -11,24 +11,23 @@ IncompleteDF = data.frame(Course1 = nrow(Incomplete_Quantity1),Course2 = nrow(In
                           Course5 = nrow(Incomplete_Quantity5),Course6 = nrow(Incomplete_Quantity6),
                           Course7 = nrow(Incomplete_Quantity7))
 
-
-Incomplete_ID = Incomplete_Quantity7$learner_id
-
+UnfinishLeaner.function = function(x,y){
+  
+Incomplete_Quantity = x%>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+          #Filter: Number of non-finishes by learner
+Incomplete_ID = Incomplete_Quantity$learner_id
+          #List of learner IDs
 l = length(Incomplete_ID)
+          #How many unique learner identities?
 
-(Incomplete_Quantity7$learner_id[9])
-
-QuestionsQuery = vector()
-for(i in 1:l){
-Questions = (cyber.security.7.question.response %>% filter(learner_id == ((Incomplete_ID[7])[1])))
-
-
-cyber.security.7.question.response$learner_id [7]
-
-QuestionsQuery[1]= nrow(Questions)
+QuestionsQuery = vector() #Making the Vector
+for(i in 1:l){ #For loop
+Questions = (y %>% filter(learner_id == ((Incomplete_ID[7])[1])))
+#Find the question answers for that specific learner ID (work through each)
+QuestionsQuery[i]= nrow(Questions) #how many for each ID?
 }
 
-New = merge(cyber.security.7.question.response, Incomplete_Quantity7, by = "learner_id")
+New = merge(y, Incomplete_Quantity7, by = "learner_id")
 
 New = New%>%filter(n != "")
 New #dataframe = includes number of unfinished steps for each learner ID
@@ -50,10 +49,13 @@ UnfinishedQuestions = cbind(UnfinishedQuestions, ProportionCorrect)
 
 UnfinishedQuestions<-UnfinishedQuestions[,-c(5)]
 
-T = ggplot(data = UnfinishedQuestions, aes(x = Unfinished, y = Proportion_Correct))
+T = ggplot(data = UnfinishedQuestions, aes(x = Unfinished, y = ProportionCorrect))
 T1 = T + geom_point(aes(x = Unfinished, y = ProportionCorrect))
-
 T1
+
+#add more years???
+
+
 
 
 
