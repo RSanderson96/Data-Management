@@ -11,51 +11,38 @@ IncompleteDF = data.frame(Course1 = nrow(Incomplete_Quantity1),Course2 = nrow(In
                           Course5 = nrow(Incomplete_Quantity5),Course6 = nrow(Incomplete_Quantity6),
                           Course7 = nrow(Incomplete_Quantity7))
 
+
 UnfinishLeaner.function = function(x,y){
   
-Incomplete_Quantity = x%>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
-          #Filter: Number of non-finishes by learner
-Incomplete_ID = Incomplete_Quantity$learner_id
-          #List of learner IDs
-l = length(Incomplete_ID)
-          #How many unique learner identities?
+  Incomplete_Quantity = x%>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+  #Filter: Number of non-finishes by learner
 
-QuestionsQuery = vector() #Making the Vector
-for(i in 1:l){ #For loop
-Questions = (y %>% filter(learner_id == ((Incomplete_ID[7])[1])))
-#Find the question answers for that specific learner ID (work through each)
-QuestionsQuery[i]= nrow(Questions) #how many for each ID?
-}
+  Count_Unfinished = (merge(y, Incomplete_Quantity, by = "learner_id"))%>%filter(n != "")
+  #dataframe = Question responses & counts the number of unfinished steps for each learner ID
+  
+  Answers= y %>% filter(correct == "true") %>% count(learner_id) %>% arrange(-n)
+  #how many correct answers for each learner ID?
+  Attempts =y %>% count(learner_id) %>% arrange(-n)
+  #How many attempts for each learner ID?
+  
+  Unfinished = data.frame(learner_id = Count_Unfinished$learner_id, Unfinished = Count_Unfinished$n)
+  Unfinished = unique.data.frame(Unfinished)
+  
+  UnfinishedQuestions = merge(Unfinished,Answers, by = "learner_id", all = TRUE)
+  UnfinishedQuestions = UnfinishedQuestions%>% rename(Correct_Answers = n)
+  UnfinishedQuestions = merge(UnfinishedQuestions,Attempts, by = "learner_id", all = TRUE)
+  UnfinishedQuestions = UnfinishedQuestions%>% rename(Quant_Attempts = n)
+  
+  ProportionCorrect = (UnfinishedQuestions$Correct_Answers/UnfinishedQuestions$Quant_Attempts)*100
+  
+  UnfinishedQuestions = cbind(UnfinishedQuestions, ProportionCorrect)
+  return(UnfinishedQuestions)}
 
-New = merge(y, Incomplete_Quantity7, by = "learner_id")
-
-New = New%>%filter(n != "")
-New #dataframe = includes number of unfinished steps for each learner ID
-
-
-Answers= cyber.security.7.question.response %>% filter(correct == "true") %>% count(learner_id) %>% arrange(-n)
-Attempts =cyber.security.7.question.response %>% count(learner_id) %>% arrange(-n)
-Unfinished = data.frame(learner_id = New$learner_id, Unfinished = New$n)
-Unfinished = unique.data.frame(Unfinished)
-
-UnfinishedQuestions = merge(Unfinished,Answers, by = "learner_id", all = TRUE)
-UnfinishedQuestions = UnfinishedQuestions%>% rename(Correct_Answers = n)
-UnfinishedQuestions = merge(UnfinishedQuestions,Attempts, by = "learner_id", all = TRUE)
-UnfinishedQuestions = UnfinishedQuestions%>% rename(Quant_Attempts = n)
-
-ProportionCorrect = (UnfinishedQuestions$Correct_Answers/UnfinishedQuestions$Quant_Attempts)*100
-
-UnfinishedQuestions = cbind(UnfinishedQuestions, ProportionCorrect)
-
-UnfinishedQuestions<-UnfinishedQuestions[,-c(5)]
+UnfinishLeaner.function(cyber.security.7.step.activity, cyber.security.7.question.response)
 
 T = ggplot(data = UnfinishedQuestions, aes(x = Unfinished, y = ProportionCorrect))
 T1 = T + geom_point(aes(x = Unfinished, y = ProportionCorrect))
 T1
 
 #add more years???
-
-
-
-
 
