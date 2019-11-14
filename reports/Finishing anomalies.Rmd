@@ -154,14 +154,59 @@ UnfinishLeaner.function = function(x,y){
   #Calculate the proportion of correct answers per learner ID, and add this to the existing dataframe:
   ProportionCorrect = (UnfinishedQuestions$Correct_Answers/UnfinishedQuestions$Quant_Attempts)*100
   UnfinishedQuestions = cbind(UnfinishedQuestions, ProportionCorrect)
+  #remove 'NA' responses for making graphs
+  UnfinishedQuestions[is.na(UnfinishedQuestions)] <- 0
   #Final result: Completed data frame
   return(UnfinishedQuestions)}
 ```
 
 The final result is a data frame that for each ID shows the number of unfinished steps, the number of question attempts, the number of correct answers, and the proportion of correct answers from questions attempted.
 
+This could be used to make several comparison models, initially seen below just for run 7 of the course as the most recent data set:
 
-T = ggplot(data = Unfinished7, aes(x = Unfinished, y = ProportionCorrect))
-T1 = T + geom_point(aes(x = Unfinished, y = ProportionCorrect))
+1): The Number of Attempted Steps
+```{R Attempts, echo = FALSE}
+At = ggplot(data = Unfinished1, aes(x = Unfinished, y = Quant_Attempts))
+At1 = At + geom_point(aes(x = Unfinished, y = Quant_Attempts, colour = "Course 1"))
+At2 = At1 + geom_point(data = Unfinished2,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course2")))
+At3 = At2 + geom_point(data = Unfinished3,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course3")))
+At4 = At3 + geom_point(data = Unfinished4,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course4")))
+At5 = At4 + geom_point(data = Unfinished5,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course5")))
+At6 = At5 + geom_point(data = Unfinished6,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course6")))
+At7 = At6 + geom_point(data = Unfinished7,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course7")))
+At7
+```
+
+2): The Number of Correct Answers
+
+```{R Answers, echo  = FALSE}
+An = ggplot(data = Unfinished1, aes(x = Unfinished, y = Correct_Answers))
+An1 = An + geom_point(aes(x = Unfinished, y = Correct_Answers, colour = "Course 1"))
+An2 = An1 + geom_point(data = Unfinished2,(aes( x = Unfinished, y = Correct_Answers, colour = "Course2")))
+An3 = An2 + geom_point(data = Unfinished3,(aes( x = Unfinished, y = Correct_Answers, colour = "Course3")))
+An4 = An3 + geom_point(data = Unfinished4,(aes( x = Unfinished, y = Correct_Answers, colour = "Course4")))
+An5 = An4 + geom_point(data = Unfinished5,(aes( x = Unfinished, y = Correct_Answers, colour = "Course5")))
+An6 = An5 + geom_point(data = Unfinished6,(aes( x = Unfinished, y = Correct_Answers, colour = "Course6")))
+An7 = An6 + geom_point(data = Unfinished7,(aes( x = Unfinished, y = Correct_Answers, colour = "Course7")))
+An7
+
+```
+
+3): The Proportion of Correct Answers
+
+```{R proportion, echo = FALSE}
+P = ggplot(data = Unfinished1, aes(x = Unfinished, y = ProportionCorrect))
+P1 = P + geom_point(aes(x = Unfinished, y = ProportionCorrect, colour = "Course 1"))
+P2 = P1 + geom_point(data = Unfinished2,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course2")))
+P3 = P2 + geom_point(data = Unfinished3,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course3")))
+P4 = P3 + geom_point(data = Unfinished4,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course4")))
+P5 = P4 + geom_point(data = Unfinished5,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course5")))
+P6 = P5 + geom_point(data = Unfinished6,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course6")))
+P7 = P6 + geom_point(data = Unfinished7,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course7")))
+P7
+
+```
+
+
 
 #add more years???
