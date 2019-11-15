@@ -203,9 +203,11 @@ Q13
 Arguably there is limited impact of the quiz timings on the number of views. Whilst this does not infer anything about the value of videos as a teaching method, it does imply that the amount of video usage is not impacted by the presence of a quiz. 
 
 ##*Did Videos change the level of attainment?*
-An alternative assessment of the impact of videos is to perform a hypothesis test to consider if the average number of correct test scores for a course run was affected by the presence of videos.
+An alternative assessment of the impact of videos is to perform a hypothesis test to consider if the average number of correct test scores for a course run was affected by the presence of videos. 
 
-To do a hypothesis tests, the overall percentage of correct quiz responses for each learner was calculated;
+The decision was made to compare the proportion of correct quiz responses for each learner. Counting the number of correct answers ignores the individuals that only attempted a limited number of questions. Additionally, the number of attempts is also varied - this suggests an anomoly within the data that could be investigated further, although is beyond the limits of this specific exploration. Therefore, proportion of correct attempts was the preferred method of analysis; this way the flaws of the data set can be limited by only focusing on the attempts observed.
+
+The percentages were calculated as below;
 
 ```{R Results.function}
 
@@ -224,6 +226,16 @@ return(Results)}
 
 ```
 
+These scores can hence be used in the following hypothesis test, to reflect whether the years after the introduction of video showed higher attainment than the years beforehand
+
+Therefore the hypotheses for testing were as follows- 
+  Ho: Average Score for course run 2 = Average score for each other course
+  H1: Average Score for course run 2 != Average score for each other course
+
+All courses had a sample size of larger than 30, so the Central Limit Theorem could be applied.
+
+#n for all courses >30 - apply CLT
+#mean score for A2 = 63.28 - how do the other courses vary?
 From these scores, the average, standard deviation and sample sizes were calculated;
 
 ```{R ResultsDF, echo = FALSE}
@@ -231,11 +243,13 @@ Resultsdf
 
 ```
 
-This assessment is undertaken through a two tailed test:
-Ho: 
+
 
 ##*Limits to the dataset*
 When considering the impact of teaching methods and engagement, this dataset has strong limitations. Whilst the question data can be associated with a learning ID, the video data is not; consequentially, all data is very generalised. Therefore, dependencies cannot be directly linked, as it cannot be tested if people watched videos AND answered correctly, as a direct Hypothesis test. 
+
+
+#incomplete data -hard decision to work out what to test! Varied number of attempts
 
 DO people complete the quiz stages?
 DO people complete the video stages?
