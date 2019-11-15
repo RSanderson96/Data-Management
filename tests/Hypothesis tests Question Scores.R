@@ -70,10 +70,17 @@ Course7Pvalue = pnorm(63.19, mean = 63.28, sd = 17.15847/sqrt(616))
 Pvalues = data.frame("3" = Course3Pvalue, "4" = Course4Pvalue, 
                      "5" = Course5Pvalue, "6" = Course6Pvalue,
                      "7" = Course7Pvalue)
+
+cache("Pvalues")
 #all values fall very comfortably within a 90% Hypothesis test - see limited impact of videos on the overall score for any course run
 
 
-
+(60.89-63.28)/(17.21/sqrt(1140))
+alpha = .025
+z.alpha = qnorm(1−alpha)
+−z.alpha               # critical value 
+Test_Stat = c(z.alpha, -z.alpha)
+Test_Stat
 
 
 
