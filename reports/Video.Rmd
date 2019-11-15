@@ -187,10 +187,26 @@ Within this graph, the preferred scatter style was maintained, as it had already
 #Comparing The Use of Videos to Overall Scores
 
 ##*Timescales: Videos and Questions
-ADD X LINES TO THE VIDEO PROPORTION GRAPH.
+
+An element of interest was if videos had higher views if they were near a quiz, for example if students used them as a revision tool to answer questions. This was modelled in the graph below:
+
+```{R_Question_Lines, echo = FALSE}
+Q9 = L8 + geom_vline(xintercept = (S[1]), (aes (colour = "red")))
+Q10 = L9 + geom_vline(xintercept = (S[2]), (aes (colour = "red")))
+Q11 = L10 + geom_vline(xintercept = (S[3]), (aes (color = "red")))
+Q12 = L11 + geom_vline(xintercept = (S[4]), (aes (color = "red")))
+Q13 = L12 + geom_vline(xintercept = (S[5]), (aes (color = "red")))
+Q13
+
+```
+
+Arguably there is limited impact of the quiz timings on the number of views. Whilst this does not infer anything about the value of videos as a teaching method, it does imply that the amount of video usage is not impacted by the presence of a quiz. 
 
 ##*Did Videos change the level of attainment?*
-Hypothesis test: Mean score for Course 2 vs Mean Score for Course 3/Course 7
+An alternative assessment of the impact of videos is to perform a hypothesis test to consider if the average number of correct test scores for a course run was affected by the presence of videos.
+
+This assessment is undertaken through a two tailed test:
+Ho: 
 
 ##*Limits to the dataset*
 When considering the impact of teaching methods and engagement, this dataset has strong limitations. Whilst the question data can be associated with a learning ID, the video data is not; consequentially, all data is very generalised. Therefore, dependencies cannot be directly linked, as it cannot be tested if people watched videos AND answered correctly, as a direct Hypothesis test. 
