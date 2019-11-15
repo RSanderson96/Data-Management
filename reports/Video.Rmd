@@ -205,6 +205,32 @@ Arguably there is limited impact of the quiz timings on the number of views. Whi
 ##*Did Videos change the level of attainment?*
 An alternative assessment of the impact of videos is to perform a hypothesis test to consider if the average number of correct test scores for a course run was affected by the presence of videos.
 
+To do a hypothesis tests, the overall percentage of correct quiz responses for each learner was calculated;
+
+```{R Results.function}
+
+Results.function = function(y){
+Answers= y %>% filter(correct == "true") %>% count(learner_id) %>% arrange(-n)
+#how many correct answers for each learner ID?
+Attempts =y %>% count(learner_id) %>% arrange(-n)
+#How many attempts for each learner ID?
+Results = merge(Answers, Attempts, by = "learner_id", all = TRUE)
+Results = Results[rowSums(is.na(Results)) == 0,]
+Results = Results%>% rename(Answers = n.x, Attempts = n.y )
+Score = ((Results$Answers)/(Results$Attempts)*100)
+Results = cbind(Results, Score)
+Results = Results[-c(1), ]
+return(Results)}
+
+```
+
+From these scores, the average, standard deviation and sample sizes were calculated;
+
+```{R ResultsDF, echo = FALSE}
+Resultsdf
+
+```
+
 This assessment is undertaken through a two tailed test:
 Ho: 
 
