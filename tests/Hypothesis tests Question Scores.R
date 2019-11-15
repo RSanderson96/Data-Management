@@ -60,12 +60,12 @@ cache("Resultsdf")
 #incomplete data -hard decision to work out what to test! Varied number of attempts
 #n for all courses >30 - apply CLT
 #mean score for A2 = 63.28 - how do the other courses vary?
-
-Course3Pvalue = pnorm(63.46, mean = 63.28, sd = 16.56791)
-Course4Pvalue = pnorm(60.89, mean = 63.28, sd = 17.213841)
-Course5Pvalue = pnorm(62.39, mean = 63.28, sd = 16.80533)
-Course6Pvalue = pnorm(62.37, mean = 63.28, sd = 17.35376)
-Course7Pvalue = pnorm(63.19, mean = 63.28, sd = 17.15847)
+sqrt(1027)
+Course3Pvalue = pnorm(63.46, mean = 63.28, sd = 16.56791/sqrt(1027))
+Course4Pvalue = pnorm(60.89, mean = 63.28, sd = 17.213841/sqrt(1140))
+Course5Pvalue = pnorm(62.39, mean = 63.28, sd = 16.80533/sqrt(1122))
+Course6Pvalue = pnorm(62.37, mean = 63.28, sd = 17.35376/sqrt(683))
+Course7Pvalue = pnorm(63.19, mean = 63.28, sd = 17.15847/sqrt(616))
 
 Pvalues = data.frame("3" = Course3Pvalue, "4" = Course4Pvalue, 
                      "5" = Course5Pvalue, "6" = Course6Pvalue,
