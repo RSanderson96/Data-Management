@@ -38,22 +38,35 @@ CourseF5 =QuantitiesFinishing.function(cyber.security.5.step.activity)
 CourseF6 =QuantitiesFinishing.function(cyber.security.6.step.activity)
 CourseF7 =QuantitiesFinishing.function(cyber.security.7.step.activity)
 
+FinishersDF = merge.data.frame(CourseF1, CourseF2, by = "Step", all=TRUE)
+FinishersDF = FinishersDF%>% rename(Run_1 = Total.x, Run_2 = Total.y )
+FinishersDF = merge.data.frame(FinishersDF, CourseF3, by = "Step", all=TRUE)
+FinishersDF = FinishersDF%>% rename(Run_3 = Total)
+FinishersDF = merge.data.frame(FinishersDF, CourseF4, by = "Step", all=TRUE)
+FinishersDF = FinishersDF%>% rename(Run_4 = Total)
+FinishersDF = merge.data.frame(FinishersDF, CourseF5, by = "Step", all=TRUE)
+FinishersDF = FinishersDF%>% rename(Run_5 = Total)
+FinishersDF = merge.data.frame(FinishersDF, CourseF6, by = "Step", all=TRUE)
+FinishersDF = FinishersDF%>% rename(Run_6 = Total)
+FinishersDF = merge.data.frame(FinishersDF, CourseF7, by = "Step", all=TRUE)
+FinishersDF = FinishersDF%>% rename(Run_7 = Total)
 
+cache("FinishersDF")
 
 #making the first graph: How many finished each step?
 
-#Decision: dismiss 1&2 as won't fit the graph - need to clean the data
 
-Finishers = ggplot (data =CourseF3,aes (x = X, y = Total))
-#CourseF1Graph = Plot +geom_point (aes (x= Step, y = CourseF1$Total, colour = "Course Run 1"))
-#CourseF2Graph = Course1Graph + geom_point (aes(x = Step, y = CourseF2$Total, colour = "Course Run 2"))
-CourseF3Graph =Finishers +geom_point (aes (x= Step, y = CourseF3$Total, colour = "Course Run 3"))
-CourseF4Graph = CourseF3Graph + geom_point (aes(x = Step, y = CourseF4$Total, colour = "Course Run 4"))
-CourseF5Graph = CourseF4Graph +geom_point (aes (x= Step, y = CourseF5$Total, colour = "Course Run 5"))
-CourseF6Graph = CourseF5Graph + geom_point (aes(x = Step, y = CourseF6$Total, colour = "Course Run 6"))
-CourseF7Graph = CourseF6Graph + geom_point (aes(x = Step, y = CourseF7$Total, colour = "Course Run 7"))
+Finishers = ggplot (data = FinishersDF,aes (x = Step, y = Total))
+CourseF1Graph = Plot +geom_point(aes( x= Step, y = Run_1, colour = "Course Run 1"))
+CourseF2Graph = CourseF1Graph +geom_point(aes( x= Step, y = Run_2, colour = "Course Run 2"))
+CourseF3Graph = CourseF2Graph +geom_point(aes( x= Step, y = Run_3, colour = "Course Run 3"))
+CourseF4Graph = CourseF3Graph +geom_point(aes( x= Step, y = Run_4, colour = "Course Run 4"))
+CourseF5Graph = CourseF4Graph +geom_point(aes( x= Step, y = Run_5, colour = "Course Run 5"))
+CourseF6Graph = CourseF5Graph +geom_point(aes( x= Step, y = Run_6, colour = "Course Run 6"))
+CourseF7Graph = CourseF6Graph +geom_point(aes( x= Step, y = Run_7, colour = "Course Run 7"))
 
-CourseF7Graph
+CourseS7Graph
+
 
 
 #Proportion graph: out of all starters, how many finished?
