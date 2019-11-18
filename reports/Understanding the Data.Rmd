@@ -2,7 +2,9 @@
 title: "Understanding the Data Sample"
 author: "Rachael Sanderson"
 date: "7 November 2019"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -21,6 +23,64 @@ load.project()
 
 The data analysis was instigated as an attempt to apply data routinely collected about students to understand their engagement, with the attention to apply the findings to improve student attainment. The course being analysed was an online course about cyber security; the data hence records the students' access to files at each step, scores upon the completion of quiz sections, enrollment information, and the overall use of videos within the course cohort. This information will be compiled to form a reproducable pipeline that can be applied within the business. 
 
+#The Data
+
+Data has been provided for 7 runs of the following course, summarised below;
+
+```{R Summary, echo = FALSE}
+Enrolements1 = cyber.security.1.enrolments
+Enrolements2 = cyber.security.2.enrolments
+Enrolements3 = cyber.security.3.enrolments
+Enrolements4 = cyber.security.4.enrolments
+Enrolements5 = cyber.security.5.enrolments
+Enrolements6 = cyber.security.6.enrolments
+Enrolements7 = cyber.security.7.enrolments
+
+People1 = nrow(Enrolements1)
+People2 = nrow(Enrolements2)
+People3 = nrow(Enrolements3)
+People4 = nrow(Enrolements4)
+People5 = nrow(Enrolements5)
+People6 = nrow(Enrolements6)
+People7 = nrow(Enrolements7)
+
+Entries = c(People1, People2, People3,People4, People5, People6, People7)
+
+Cohort = 1:7
+
+Cohort_Summaries = data.frame(Cohort = Cohort, Entries = Entries)
+
+#Number of steps
+
+Steps.function = function(x){
+StepActivity = x
+Steps=c((StepActivity$week_number)+((StepActivity$step_number)/100)) #acknowledging data complication
+StepActivity = cbind(StepActivity, Steps) #editing the data with the new column
+S= unique(StepActivity$Steps, incomparables = FALSE) #list the unique steps
+L =length(S)
+return(L)}
+
+Steps1 = Steps.function(cyber.security.1.step.activity)
+Steps2 = Steps.function(cyber.security.2.step.activity)
+Steps3 = Steps.function(cyber.security.3.step.activity)
+Steps4 = Steps.function(cyber.security.4.step.activity)
+Steps5 = Steps.function(cyber.security.5.step.activity)
+Steps6 = Steps.function(cyber.security.6.step.activity)
+Steps7 = Steps.function(cyber.security.7.step.activity)
+
+Steps_Vector = c(Steps1, Steps2, Steps3, Steps4, Steps5, Steps6, Steps7)
+
+Cohort_Summaries = cbind(Cohort_Summaries, Steps_Vector)
+
+VideoSteps = c(0,0,13,13,13,13,13)
+
+Cohort_Summaries = cbind(Cohort_Summaries, VideoSteps)
+
+Cohort_Summaries = Cohort_Summaries%>% rename(Enrolments=Entries,Number_of_Steps= Steps_Vector, Number_of_Video_Steps = VideoSteps)
+
+Cohort_Summaries
+```
+
 #An introduction to the files provided
 
 ##*Step Activity*
@@ -29,12 +89,30 @@ This was the most prominant data set used within the analysis, as it shows the s
 ##*"Leaving Survey Responses"*
 This data contained the responses of all individuals who left the course and responded to the survey that enquired why. This is potentially valuable information, as it provides an insight into why individuals feel they cannot cope, and where the course should be improved. This data is only included for courses 4 - 7, and was analysed independently as well as being applied to support other analyses once gaps and complications were realised, as it is observed to be a potentially incomplete sample. 
 
+##*Question Responses*
+This data shows the quiz answers and so scores for each learner ID within the course. As the quiz steps were the same throughout the data sets, and this data can be used for all courses, this was a valuable data set used to compare attainment for each run of the course to consider if there was improvement at each stage.
+
+##*Video Statistics*
+This data file shows the usage of each video, based on total views, % watched, country of viewer and method of viewer. This data file was mostly used within the analysis to consider the cohort interaction with a specific teaching method. As this was only introduced during Course Run 3, hypothesis tests could also be run to see if there is a correlation to a significant change in results upon the introduction of video.
+
+##*Enrolments*
+This file has the most potential to provide information about the student's backgrounds; however, it is incomplete as it contains individuals who are identified as enrolled yet their information is missing. Therefore this data set was used to contextualise each course analysis to quantify the number of enrolments, but could not be used for intricate data analysis.
+
 ##*"Archetype Survey Responses", "Weekly Sentiment survey responses *
 
 This information was missing for stages 1 - x. This data outlines the types of learners within the course, seperated by user ID. This data was not used within the analysis as it is missing in its entirety for several course runs, and is missing for the majority of the rest, for example the Archetype Survey Responses only covered 175/2342 enrollments for Course Run 7.
 
 
+#Focus and Initial Hypotheses
 
-#*Missing Values*
+After reflecting on the available data, and the business objectives, the data pipeline will focus on the following objectives;
 
-##*Focus and Initial Hypotheses
+1) When are people not completing steps of the course?
+    - This will consider which steps are attracting the least consumers, and so need to be improved
+    
+2) Is the data about unfinished courses complete?
+    - This will reflect on the interpretation of an 'incomplete' step.
+  
+3) Is the teaching method influential on attainment, particularly in relation to video?
+    - This will reflect on the use of videos, and the variation in attainment across course runs. 
+    
