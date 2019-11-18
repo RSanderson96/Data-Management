@@ -3,9 +3,9 @@ title: "A Consideration of Attainment"
 author: "Rachael Sanderson"
 date: "5 November 2019"
 output:
-  word_document: default
-  pdf_document: default
   html_document: default
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -65,7 +65,7 @@ CorrectDF
 
 The initial approach was to model as a scatter plot; 
 
-```{R Questions_Scatter, echo = FALSE}
+```{R Questions_Scatter, echo = FALSE, fig.width=12, fig.height = 8}
 Correct = ggplot(data=CorrectDF, x=Question, Y = Correct_Answers)
 C1 = Correct + geom_point(aes(x=Question, y=Course1, colour = "Course1"))
 C2 = C1 + geom_point(aes(x=Question, y=Course2, colour = "Course2"))
@@ -84,13 +84,18 @@ This plot is useful to see variations within a question, for example the first r
 
 The alternative visualisation is a collection of boxplots:
 
-```{R Question_Box}
-boxplot(CorrectDF$Course1, CorrectDF$Course2, CorrectDF$Course3, CorrectDF$Course4, CorrectDF$Course5, CorrectDF$Course6, CorrectDF$Course7,
-        main = "Comparison of the results for each course",
-        names = c("Course 1", "Course 2", "Course3", "Course 4", "Course 5", "Course 6", "Course 7"),
-        ylab = "% Correct Responses",
-        xlab = "Course Run")
+```{R Question_Box, fig.width=12}
+Correct = within(CorrectDF, rm(Question, Average))
+CorrectVec = as.vector(as.matrix(Correct))
+Course = rep(1:7, each = 22)
+BoxDF = data.frame(Course = Course, Score = CorrectVec)
 
+Box = ggplot(data = BoxDF, x = Course, y = Score)
+B1 = Box + geom_boxplot(aes(group = Course, x = Course, y = Score, fill = factor(Course)))
+B2 = B1 + labs(title="The Average Number of Correct Answers Throughout a Course Run",
+        x ="Course", y = "Percentage of Correct Answers (%)")
+
+B2
 ```
 
 This is useful to reflect the overall attainment for all questions within a course. The medians are all relatively similar, particularly when outliers are acknowledged. The majority are mostly skewed to the lower end of the scores (shown by the smaller second lower quartile); this is increasingly more so after course 2. The split between runs 2 and 3 is important: this is the point when videos were introduced. 
