@@ -25,24 +25,25 @@ DFActivity = data.frame(Step = S, Total = total_values)
 
 #The final data frames
 CourseS1 =QuantitiesStarting.function(cyber.security.1.step.activity) #run the function for each file
-sum(CourseS1$Total)  #rows counted? Needs to match the number of rows in the original file(testing function)
 CourseS2 =QuantitiesStarting.function(cyber.security.2.step.activity)
-sum(CourseS2$Total)
 CourseS3 =QuantitiesStarting.function(cyber.security.3.step.activity)
-sum(CourseS3$Total)
 CourseS4 =QuantitiesStarting.function(cyber.security.4.step.activity)
-sum(CourseS4$Total)
 CourseS5 =QuantitiesStarting.function(cyber.security.5.step.activity)
-sum (CourseS5$Total)
 CourseS6 =QuantitiesStarting.function(cyber.security.6.step.activity)
-sum(CourseS6$Total)
 CourseS7 =QuantitiesStarting.function(cyber.security.7.step.activity)
-sum(CourseS7$Total)
 
-cache("CourseS7")
-
-#sum (course)checking the dataframes - making them compatible
-
+StartersDF = merge.data.frame(CourseS1, CourseS2, by = "Step", all=TRUE)
+StartersDF = StartersDF%>% rename(Run_1 = Total.x, Run_2 = Total.y )
+StartersDF = merge.data.frame(StartersDF, CourseS3, by = "Step", all=TRUE)
+StartersDF = StartersDF%>% rename(Run_3 = Total)
+StartersDF = merge.data.frame(StartersDF, CourseS4, by = "Step", all=TRUE)
+StartersDF = StartersDF%>% rename(Run_4 = Total)
+StartersDF = merge.data.frame(StartersDF, CourseS5, by = "Step", all=TRUE)
+StartersDF = StartersDF%>% rename(Run_5 = Total)
+StartersDF = merge.data.frame(StartersDF, CourseS6, by = "Step", all=TRUE)
+StartersDF = StartersDF%>% rename(Run_6 = Total)
+StartersDF = merge.data.frame(StartersDF, CourseS7, by = "Step", all=TRUE)
+StartersDF = StartersDF%>% rename(Run_7 = Total)
 
 
 
@@ -52,15 +53,16 @@ cache("CourseS7")
 #Decision: dismiss 1&2 as won't fit the graph - need to clean the data
 
 Plot = ggplot (data =CourseS3,aes (x = X, y = Total))
-#CourseS1Graph = Plot +geom_point (aes (x= Step, y = Course1$Total, colour = "Course Run 1"))
-#CourseS2Graph = Course1Graph + geom_point (aes(x = Step, y = Course2$Total, colour = "Course Run 2"))
+CourseS1Graph = Plot +geom_point(data = CourseS1, x= Step, y = Total, colour = "blue")
+CourseS2Graph = Course1Graph + geom_point (aes(x = Step, y = Course2$Total, colour = "Course Run 2"))
 CourseS3Graph =Plot +geom_point (aes (x= Step, y = CourseS3$Total, colour = "Course Run 3"))
 CourseS4Graph = CourseS3Graph + geom_point (aes(x = Step, y = CourseS4$Total, colour = "Course Run 4"))
 CourseS5Graph = CourseS4Graph +geom_point (aes (x= Step, y = CourseS5$Total, colour = "Course Run 5"))
 CourseS6Graph = CourseS5Graph + geom_point (aes(x = Step, y = CourseS6$Total, colour = "Course Run 6"))
 CourseS7Graph = CourseS6Graph + geom_point (aes(x = Step, y = CourseS7$Total, colour = "Course Run 7"))
 
-
+CourseF3Graph = Finishers + geom_point(data = CourseF3, colour = "blue")) 
+CourseS1Graph
 #Proportion graph
 
 StartProp = ggplot (data = CourseS3,aes (x = X, y = Total))
