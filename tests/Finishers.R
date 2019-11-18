@@ -71,14 +71,15 @@ CourseS7Graph
 
 #Proportion graph: out of all starters, how many finished?
 
-FinishProp = ggplot (data = CourseF3,aes (x = Step, y = Proportion_Finishers))
-#CourseFP1Graph = Plot +geom_point (aes (x= Step, y = Course1$Total, colour = "Course Run 1"))
-#CourseFP2Graph = Course1Graph + geom_point (aes(x = Step, y = Course2$Total, colour = "Course Run 2"))
-CourseFP3Graph = FinishProp + geom_point (aes (x= Step, y = CourseF3$Total/CourseS3$Total, colour = "Course Run 3"))
-CourseFP4Graph = CourseFP3Graph + geom_point (aes(x = Step, y = CourseF4$Total/CourseS4$Total, colour = "Course Run 4"))
-CourseFP5Graph = CourseFP4Graph +geom_point (aes (x= Step, y = CourseF5$Total/CourseS5$Total, colour = "Course Run 5"))
-CourseFP6Graph = CourseFP5Graph + geom_point (aes(x = Step, y = CourseF6$Total/CourseS6$Total, colour = "Course Run 6"))
-CourseFP7Graph = CourseFP6Graph + geom_point (aes(x = Step, y = CourseF7$Total/CourseS7$Total, colour = "Course Run 7"))
+
+FinishProp = ggplot (data = FinishersDF,aes (x = Step, y = Total))
+CourseFP1Graph = FinishProp +geom_point(aes( x= Step, y = Run_1/(Cohort_Summaries$Enrolments[1]), colour = "Course Run 1"))
+CourseFP2Graph = CourseFP1Graph +geom_point(aes( x= Step, y = Run_2/(Cohort_Summaries$Enrolments[2]), colour = "Course Run 2"))
+CourseFP3Graph = CourseFP2Graph +geom_point(aes( x= Step, y = Run_3/(Cohort_Summaries$Enrolments[3]), colour = "Course Run 3"))
+CourseFP4Graph = CourseFP3Graph +geom_point(aes( x= Step, y = Run_4/(Cohort_Summaries$Enrolments[4]), colour = "Course Run 4"))
+CourseFP5Graph = CourseFP4Graph +geom_point(aes( x= Step, y = Run_5/(Cohort_Summaries$Enrolments[5]), colour = "Course Run 5"))
+CourseFP6Graph = CourseFP5Graph +geom_point(aes( x= Step, y = Run_6/(Cohort_Summaries$Enrolments[6]), colour = "Course Run 6"))
+CourseFP7Graph = CourseFP6Graph +geom_point(aes( x= Step, y = Run_7/(Cohort_Summaries$Enrolments[7]), colour = "Course Run 7"))
 
 CourseFP7Graph
 
