@@ -50,8 +50,13 @@ DFActivity = data.frame(Step = S, Total = total_values)
    return(DFActivity)} #return: the final dataframe for the submitted course run
    
 ```
-This function then counts how many people started each step, to produce a data frame that can then be evaluated. It can further be manipulated to identify the total finishers, or the difference between these two figures, as will be demonstrated further.  
+This function then counts how many people started each step, to produce a data frame that can then be evaluated. It can further be manipulated to identify the total finishers, or the difference between these two figures, as will be demonstrated further. The datasets were then merged together to make one data frame to produce the plots;
 
+```{R mergeing}
+StartersDF = merge.data.frame(CourseS1, CourseS2, by = "Step", all=TRUE)
+StartersDF = StartersDF%>% rename(Run_1 = Total.x, Run_2 = Total.y ) #....
+
+```
 #*Analysis*
 
 ##*Part One: How many people starting at each step?*
@@ -60,26 +65,20 @@ The first analysis was to record how many people are recorded as starting at eac
 The two can be modelled as below, with exact figures (left) and proportions (right):
 
 ```{R Starters}
-Plot = ggplot (data = CourseS3,aes (x = X, y = Total))
-CourseS3Graph =Plot +geom_point (aes (x= Step, y = CourseS3$Total, colour = "Course Run 3"))
-CourseS4Graph = CourseS3Graph + geom_point (aes(x = Step, y = CourseS4$Total, colour = "Course Run 4"))
-CourseS5Graph = CourseS4Graph +geom_point (aes (x= Step, y = CourseS5$Total, colour = "Course Run 5"))
-CourseS6Graph = CourseS5Graph + geom_point (aes(x = Step, y = CourseS6$Total, colour = "Course Run 6"))
-CourseS7Graph = CourseS6Graph + geom_point (aes(x = Step, y = CourseS7$Total, colour = "Course Run 7"))
+Plot = ggplot (data = StartersDF,aes (x = Step, y = Total))
+CourseS1Graph = Plot +geom_point(aes( x= Step, y = Run_1, colour = "Course Run 1"))
+CourseS2Graph = CourseS1Graph +geom_point(aes( x= Step, y = Run_2, colour = "Course Run 2"))
+CourseS3Graph = CourseS2Graph +geom_point(aes( x= Step, y = Run_3, colour = "Course Run 3"))
+CourseS4Graph = CourseS3Graph +geom_point(aes( x= Step, y = Run_4, colour = "Course Run 4"))
+CourseS5Graph = CourseS4Graph +geom_point(aes( x= Step, y = Run_5, colour = "Course Run 5"))
+CourseS6Graph = CourseS5Graph +geom_point(aes( x= Step, y = Run_6, colour = "Course Run 6"))
+CourseS7Graph = CourseS6Graph +geom_point(aes( x= Step, y = Run_7, colour = "Course Run 7"))
+
 CourseS8Graph = CourseS7Graph +labs(title="The Total Students Starting Each Step",
         x ="Step", y = "Total Starters")
 CourseS8Graph
 ```
 Alternatively, a graph of each quantity of starters as a proportion of the number of people enrolled on the course can be constructed:
-
-```{R ProportionGraph}
-StartProp = ggplot (data = CourseS3,aes (x = X, y = Total))
-CourseSP3Graph =StartProp +geom_point (aes (x= Step, y = CourseS3$Total/(Cohort_Summaries$Entries[3]), colour = "Course Run 3"))
-CourseSP4Graph = CourseSP3Graph + geom_point (aes(x = Step, y = CourseS4$Total/(Cohort_Summaries$Entries[4]), colour = "Course Run 4")) #.....
-
-```
-
-The two can be modelled as below, with exact figures (left) and proportions (right):
 
 ```{R Proportion, include = FALSE}
 CourseSP5Graph = CourseSP4Graph +geom_point (aes (x= Step, y = CourseS5$Total/(Cohort_Summaries$Entries[5]), colour = "Course Run 5"))
@@ -87,11 +86,6 @@ CourseSP6Graph = CourseSP5Graph + geom_point (aes(x = Step, y = CourseS6$Total/(
 CourseSP7Graph = CourseSP6Graph + geom_point (aes(x = Step, y = CourseS7$Total/(Cohort_Summaries$Entries[7]), colour = "Course Run 7"))
 CourseSP8Graph = CourseSP7Graph +labs(title="Proportion of Enrolled Students Starting Each Step",
         x ="Step", y = "Proportion of Starters")
-
-```
-
-```{R Starter_Comparison}
-grid.arrange(CourseS8Graph, CourseSP8Graph)
 
 ```
 
