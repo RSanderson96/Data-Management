@@ -74,6 +74,17 @@ CourseSP5Graph = CourseSP4Graph +geom_point (aes (x= Step, y = CourseS5$Total/(C
 CourseSP6Graph = CourseSP5Graph + geom_point (aes(x = Step, y = CourseS6$Total/(Cohort_Summaries$Entries[6]), colour = "Course Run 6"))
 CourseSP7Graph = CourseSP6Graph + geom_point (aes(x = Step, y = CourseS7$Total/(Cohort_Summaries$Entries[7]), colour = "Course Run 7"))
 
+
+
+Plot = ggplot (data = StartersDF,aes (x = Step, y = Total))
+CourseSP1Graph = Plot +geom_point(aes( x= Step, y = Run_1/(Cohort_Summaries$Enrolments[1]), colour = "Course Run 1"))
+CourseSP2Graph = CourseSP1Graph +geom_point(aes( x= Step, y = Run_2/(Cohort_Summaries$Enrolments[2]), colour = "Course Run 2"))
+CourseSP3Graph = CourseSP2Graph +geom_point(aes( x= Step, y = Run_3/(Cohort_Summaries$Enrolments[3]), colour = "Course Run 3"))
+CourseSP4Graph = CourseSP3Graph +geom_point(aes( x= Step, y = Run_4/(Cohort_Summaries$Enrolments[4]), colour = "Course Run 4"))
+CourseSP5Graph = CourseSP4Graph +geom_point(aes( x= Step, y = Run_5/(Cohort_Summaries$Enrolments[5]), colour = "Course Run 5"))
+CourseSP6Graph = CourseSP5Graph +geom_point(aes( x= Step, y = Run_6/(Cohort_Summaries$Enrolments[6]), colour = "Course Run 6"))
+CourseSP7Graph = CourseSP6Graph +geom_point(aes( x= Step, y = Run_7/(Cohort_Summaries$Enrolments[7]), colour = "Course Run 7"))
+
 CourseSP7Graph
 
 
