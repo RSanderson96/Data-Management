@@ -1,3 +1,7 @@
+library(ProjectTemplate)
+load.project()
+
+
 #to do: Starters-finishers graph.
 DifferenceDF = data.frame(Step = CourseS3$Step, 
                           Difference3 = (CourseS3$Total-CourseF3$Total),
@@ -12,6 +16,8 @@ D4 = D3 + geom_point(aes(x=Step, y= Difference4, colour = "Course Run4"))
 D5 = D4 + geom_point(aes(x=Step, y= Difference5, colour = "Course Run5"))
 D6 = D5 + geom_point(aes(x=Step, y= Difference6, colour = "Course Run6"))
 D7 = D6 + geom_point(aes(x=Step, y= Difference7, colour = "Course Run7"))
+
+
 
 FinalDiff = D7
 FinalDiff
@@ -36,4 +42,5 @@ DiffPercent = DP7
 
 DiffPercent
 
+DP8 = DP7 + geom_vline(xintercept, color = "red")
 
