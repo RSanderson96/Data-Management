@@ -17,14 +17,24 @@ load.project()
 
 ```
 
-#*Understanding the Data*
+#Business Objectives
 
-##*Files Provided*
+The data analysis was instigated as an attempt to apply data routinely collected about students to understand their engagement, with the attention to apply the findings to improve student attainment. The course being analysed was an online course about cyber security; the data hence records the students' access to files at each step, scores upon the completion of quiz sections, enrollment information, and the overall use of videos within the course cohort. This information will be compiled to form a reproducable pipeline that can be applied within the business. 
 
-##*Enrolements*
+#An introduction to the files provided
 
-##*Course Adjustments*
+##*Step Activity*
+This was the most prominant data set used within the analysis, as it shows the start times and finish times for each step, seperated by each individual learner ID. This data required manipulation to correct the 'step numbers', as Step 1.1 is at risk of being matched to 1.10, and so this will be done before every application. Additionally, use of this data revealed its flaws as a data set; an unfinished step was not necessarily an unfinished course - this was consequentially investigated in one of the analysis runs. 
 
-##*Missing Values*
+##*"Leaving Survey Responses"*
+This data contained the responses of all individuals who left the course and responded to the survey that enquired why. This is potentially valuable information, as it provides an insight into why individuals feel they cannot cope, and where the course should be improved. This data is only included for courses 4 - 7, and was analysed independently as well as being applied to support other analyses once gaps and complications were realised, as it is observed to be a potentially incomplete sample. 
+
+##*"Archetype Survey Responses", "Weekly Sentiment survey responses *
+
+This information was missing for stages 1 - x. This data outlines the types of learners within the course, seperated by user ID. This data was not used within the analysis as it is missing in its entirety for several course runs, and is missing for the majority of the rest, for example the Archetype Survey Responses only covered 175/2342 enrollments for Course Run 7.
+
+
+
+#*Missing Values*
 
 ##*Focus and Initial Hypotheses
