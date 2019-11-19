@@ -3,8 +3,8 @@ title: "Understanding the Data Sample"
 author: "Rachael Sanderson"
 date: "7 November 2019"
 output:
-  word_document: default
   html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -96,7 +96,64 @@ This data shows the quiz answers and so scores for each learner ID within the co
 This data file shows the usage of each video, based on total views, % watched, country of viewer and method of viewer. This data file was mostly used within the analysis to consider the cohort interaction with a specific teaching method. As this was only introduced during Course Run 3, hypothesis tests could also be run to see if there is a correlation to a significant change in results upon the introduction of video.
 
 ##*Enrolments*
-This file has the most potential to provide information about the student's backgrounds; however, it is incomplete as it contains individuals who are identified as enrolled yet their information is missing. Therefore this data set was used to contextualise each course analysis to quantify the number of enrolments, but could not be used for intricate data analysis.
+This file has the most potential to provide information about the student's backgrounds; however, it is incomplete as it contains individuals who are identified as enrolled yet their information is missing. These gaps can be shown below;
+
+```{R Unknowns, include = FALSE, warning = FALSE}
+
+Unknowns.function = function(x){ #x = file selected to analyse
+Enrolements = x
+L =length(Enrolements$learner_id)
+#gender
+  Unknown= Enrolements %>% filter(gender=="Unknown")
+  Count = nrow(Unknown)
+  L =length(Enrolements$learner_id)
+  Gender = Count/L
+#Country
+  Unknown= Enrolements %>% filter(country=="Unknown")
+  Count = nrow(Unknown)
+  L =length(Enrolements$learner_id)
+  Country = Count/L
+#Education
+  Unknown= Enrolements %>% filter(highest_education_level=="Unknown")
+  Count = nrow(Unknown)
+  L =length(Enrolements$learner_id)
+  Education = Count/L
+  
+ CourseUnknown = c(Gender, Country, Education)
+ 
+ return(CourseUnknown)}
+
+  Unknowns1=Unknowns.function(cyber.security.1.enrolments)
+  Unknowns2=Unknowns.function(cyber.security.2.enrolments)
+  Unknowns3=Unknowns.function(cyber.security.3.enrolments)
+  Unknowns4=Unknowns.function(cyber.security.4.enrolments)
+  Unknowns5=Unknowns.function(cyber.security.5.enrolments)
+  Unknowns6=Unknowns.function(cyber.security.6.enrolments)
+  Unknowns7=Unknowns.function(cyber.security.7.enrolments)
+
+Run = 1:7
+Gender = c(Unknowns1 [1], Unknowns2 [1], Unknowns3 [1], Unknowns4[1], Unknowns5[1], Unknowns6[1], Unknowns7[1])
+Country = c(Unknowns1 [2], Unknowns2 [2], Unknowns3 [2], Unknowns4[2], Unknowns5[2], Unknowns6[2], Unknowns7[2])
+Education = c(Unknowns1 [3], Unknowns2 [3], Unknowns3 [3], Unknowns4[3], Unknowns5[3], Unknowns6[3], Unknowns7[3])
+
+dfunknowns = data.frame(Run, Gender, Country, Education)
+
+U=ggplot(data=dfunknowns, aes(x=Run, y= Proportion_of_Unknowns)) 
+U1 = U + geom_point (aes (x=Run, y=Gender, colour = "Gender"))
+U2 = U1 + geom_point (aes (x=Run, y= Country, colour = "Country"))
+U3Graph = U2 + geom_point (aes (x=Run, y=Education, colour = "Education", size = 1))
+Scaled = U3Graph + ylim(0.5,1)
+ 
+```
+```{R ShowUnknown, echo = FALSE, fig.width = 20, fig.height = 10}
+grid.arrange(U3Graph, Scaled, nrow = 2)
+
+```
+
+The comparison of the two graphs shows the importance of scale within their design. The first graph emphasises that all runs of the course are missing demographic data for over 85% of their cohorts. The second grpah emphasises how this varies between cohorts - potentially exaggerating this difference as the variations are visualised to appear to be more extreme.
+
+This initial exploration shows that there are clear difficulties to do evaluations based on age, gender or education (as just three examples), as this information is missing for a large proportion of the samples. Therefore this data set was only used to contextualise each course analysis to quantify the number of enrolments, but could not be used for intricate data analysis.
+Additionally, the flaws with this data set encourage questions about the reliability of other data sets, due to the volume of missing information.
 
 ##*"Archetype Survey Responses", "Weekly Sentiment survey responses *
 
