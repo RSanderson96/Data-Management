@@ -1,0 +1,176 @@
+---
+title: "Introducing the Data"
+author: "Rachael Sanderson"
+date: "22 November 2019"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+library(ProjectTemplate)
+
+```
+
+```{r load_project, include = FALSE}
+load.project()
+
+```
+
+##Business Objectives
+
+The data analysis was instigated as an attempt to apply data routinely collected about students to understand their engagement, with the attention to apply the findings to improve student attainment. The course being analysed was an online course about cyber security; the data hence records the students' access to files at each step, scores upon the completion of quiz sections, enrollment information, and the overall use of videos within the course cohort. This information will be compiled to form a reproducable pipeline that can be applied within the business. 
+
+##The Data
+
+Data has been provided for 7 runs of the following course, summarised below;
+
+```{R Summary, echo = FALSE}
+Enrolements1 = cyber.security.1.enrolments
+Enrolements2 = cyber.security.2.enrolments
+Enrolements3 = cyber.security.3.enrolments
+Enrolements4 = cyber.security.4.enrolments
+Enrolements5 = cyber.security.5.enrolments
+Enrolements6 = cyber.security.6.enrolments
+Enrolements7 = cyber.security.7.enrolments
+
+People1 = nrow(Enrolements1)
+People2 = nrow(Enrolements2)
+People3 = nrow(Enrolements3)
+People4 = nrow(Enrolements4)
+People5 = nrow(Enrolements5)
+People6 = nrow(Enrolements6)
+People7 = nrow(Enrolements7)
+
+Entries = c(People1, People2, People3,People4, People5, People6, People7)
+
+Cohort = 1:7
+
+Cohort_Summaries = data.frame(Cohort = Cohort, Entries = Entries)
+
+#Number of steps
+
+Steps.function = function(x){
+StepActivity = x
+Steps=c((StepActivity$week_number)+((StepActivity$step_number)/100)) #acknowledging data complication
+StepActivity = cbind(StepActivity, Steps) #editing the data with the new column
+S= unique(StepActivity$Steps, incomparables = FALSE) #list the unique steps
+L =length(S)
+return(L)}
+
+Steps1 = Steps.function(cyber.security.1.step.activity)
+Steps2 = Steps.function(cyber.security.2.step.activity)
+Steps3 = Steps.function(cyber.security.3.step.activity)
+Steps4 = Steps.function(cyber.security.4.step.activity)
+Steps5 = Steps.function(cyber.security.5.step.activity)
+Steps6 = Steps.function(cyber.security.6.step.activity)
+Steps7 = Steps.function(cyber.security.7.step.activity)
+
+Steps_Vector = c(Steps1, Steps2, Steps3, Steps4, Steps5, Steps6, Steps7)
+
+Cohort_Summaries = cbind(Cohort_Summaries, Steps_Vector)
+
+VideoSteps = c(0,0,13,13,13,13,13)
+
+Cohort_Summaries = cbind(Cohort_Summaries, VideoSteps)
+
+Cohort_Summaries = Cohort_Summaries%>% rename(Enrolments=Entries,Number_of_Steps= Steps_Vector, Number_of_Video_Steps = VideoSteps)
+
+Cohort_Summaries
+```
+
+##An introduction to the files provided
+
+###*Step Activity*
+This was the most prominant data set used within the analysis, as it shows the start times and finish times for each step, seperated by each individual learner ID. This data required manipulation to correct the 'step numbers', as Step 1.1 is at risk of being matched to 1.10, and so this will be done before every application. Additionally, use of this data revealed its flaws as a data set; an unfinished step was not necessarily an unfinished course - this was consequentially investigated in one of the analysis runs. 
+
+###*Leaving Survey Responses*
+This data contained the responses of all individuals who left the course and responded to the survey that enquired why. This is potentially valuable information, as it provides an insight into why individuals feel they cannot cope, and where the course should be improved. This data is only included for courses 4 - 7, and was analysed independently as well as being applied to support other analyses once gaps and complications were realised, as it is observed to be a potentially incomplete sample. 
+
+###*Question Responses*
+This data shows the quiz answers and so scores for each learner ID within the course. As the quiz steps were the same throughout the data sets, and this data can be used for all courses, this was a valuable data set used to compare attainment for each run of the course to consider if there was improvement at each stage.
+
+###*Video Statistics*
+This data file shows the usage of each video, based on total views, % watched, country of viewer and method of viewer. This data file was mostly used within the analysis to consider the cohort interaction with a specific teaching method. As this was only introduced during Course Run 3, hypothesis tests could also be run to see if there is a correlation to a significant change in results upon the introduction of video.
+
+###*Enrolments*
+This file has the most potential to provide information about the student's backgrounds; however, it is incomplete as it contains individuals who are identified as enrolled yet their information is missing. These gaps can be shown below;
+
+```{R Unknowns, include = FALSE, warning = FALSE}
+
+Unknowns.function = function(x){ #x = file selected to analyse
+Enrolements = x
+L =length(Enrolements$learner_id)
+#gender
+  Unknown= Enrolements %>% filter(gender=="Unknown")
+  Count = nrow(Unknown)
+  L =length(Enrolements$learner_id)
+  Gender = Count/L
+#Country
+  Unknown= Enrolements %>% filter(country=="Unknown")
+  Count = nrow(Unknown)
+  L =length(Enrolements$learner_id)
+  Country = Count/L
+#Education
+  Unknown= Enrolements %>% filter(highest_education_level=="Unknown")
+  Count = nrow(Unknown)
+  L =length(Enrolements$learner_id)
+  Education = Count/L
+  
+ CourseUnknown = c(Gender, Country, Education)
+ 
+ return(CourseUnknown)}
+
+  Unknowns1=Unknowns.function(cyber.security.1.enrolments)
+  Unknowns2=Unknowns.function(cyber.security.2.enrolments)
+  Unknowns3=Unknowns.function(cyber.security.3.enrolments)
+  Unknowns4=Unknowns.function(cyber.security.4.enrolments)
+  Unknowns5=Unknowns.function(cyber.security.5.enrolments)
+  Unknowns6=Unknowns.function(cyber.security.6.enrolments)
+  Unknowns7=Unknowns.function(cyber.security.7.enrolments)
+
+Run = 1:7
+Gender = c(Unknowns1 [1], Unknowns2 [1], Unknowns3 [1], Unknowns4[1], Unknowns5[1], Unknowns6[1], Unknowns7[1])
+Country = c(Unknowns1 [2], Unknowns2 [2], Unknowns3 [2], Unknowns4[2], Unknowns5[2], Unknowns6[2], Unknowns7[2])
+Education = c(Unknowns1 [3], Unknowns2 [3], Unknowns3 [3], Unknowns4[3], Unknowns5[3], Unknowns6[3], Unknowns7[3])
+
+dfunknowns = data.frame(Run, Gender, Country, Education)
+
+U=ggplot(data=dfunknowns, aes(x=Run, y= Proportion_of_Unknowns)) 
+U1 = U + geom_point (aes (x=Run, y=Gender, colour = "Gender"))
+U2 = U1 + geom_point (aes (x=Run, y= Country, colour = "Country"))
+U3Graph = U2 + geom_point (aes (x=Run, y=Education, colour = "Education", size = 1))
+Scaled = U3Graph + ylim(0.5,1)
+ 
+```
+```{R ShowUnknown, echo = FALSE, fig.width = 20, fig.height = 10}
+grid.arrange(U3Graph, Scaled, nrow = 2)
+
+```
+
+The comparison of the two graphs shows the importance of scale within their design. The first graph emphasises that all runs of the course are missing demographic data for over 85% of their cohorts. The second grpah emphasises how this varies between cohorts - potentially exaggerating this difference as the variations are visualised to appear to be more extreme, for example run 5 compared to run 6.
+
+This initial exploration shows that there are clear difficulties to do evaluations based on age, gender or education (as just three examples), as this information is missing for a large proportion of the samples. Therefore this data set was only used to contextualise each course analysis to quantify the number of enrolments, but could not be used for intricate data analysis.
+Additionally, the flaws with this data set encourage questions about the reliability of other data sets, due to the volume of missing information.
+
+###"Archetype Survey Responses and Weekly Sentiment survey responses*
+
+This information was missing for stages 1 - x. This data outlines the types of learners within the course, seperated by user ID. This data was not used within the analysis as it is missing in its entirety for several course runs, and is missing for the majority of the rest, for example the Archetype Survey Responses only covered 175/2342 enrollments for Course Run 7.
+
+
+##Focus and Initial Hypotheses
+
+After reflecting on the available data, and the business objectives, the data pipeline will focus on the following objectives;
+
+1) When are people not completing steps of the course?
+    - This will consider which steps are attracting the least consumers, and so need to be improved
+    
+2) Is the data about unfinished courses complete?
+    - This will reflect on the interpretation of an 'incomplete' step.
+  
+3) Is the teaching method influential on attainment, particularly in relation to video?
+    - This will reflect on the use of videos, and the variation in attainment across course runs. 
+    
