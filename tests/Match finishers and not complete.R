@@ -33,5 +33,8 @@ Incomplete6 = LeavingResponses.function(cyber.security.6.step.activity, cyber.se
 Incomplete7 = LeavingResponses.function(cyber.security.7.step.activity, cyber.security.7.leaving.survey.responses)
 
 DF = data.frame(Both = Incomplete4 [1], Incomplete_No_Reason = Incomplete4 [2], Reason_Not_Incomplete = Incomplete4 [3])
-IncompleteDF = rbind(DF,Incomplete5, Incomplete6, Incomplete7)
+IncompleteReasonsDF = rbind(DF,Incomplete5, Incomplete6, Incomplete7)
+IncompleteReasonsDF = cbind(c(4:7), IncompleteReasonsDF)
+IncompleteReasonsDF = IncompleteReasonsDF%>% rename(Course_Run = "c(4:7)")
                                                  
+cache("IncompleteReasonsDF")
