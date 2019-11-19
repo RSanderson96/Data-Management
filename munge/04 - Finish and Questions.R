@@ -1,6 +1,3 @@
-library(ProjectTemplate)
-load.project()
-
 #1) How Many Times For Each Course Does a Learner Start a Section, But Not finish It?
 
 #1a)How many times per learner?

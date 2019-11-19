@@ -1,6 +1,3 @@
-library(ProjectTemplate)
-load.project()
-
 #How many times did an ID not complete a step?
 
 LeavingResponses.function = function(x,y) {

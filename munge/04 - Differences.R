@@ -1,6 +1,3 @@
-library(ProjectTemplate)
-load.project()
-
 
 #to do: Starters-finishers graph.
 DifferenceDF = data.frame(Step = SFDF$Step, 

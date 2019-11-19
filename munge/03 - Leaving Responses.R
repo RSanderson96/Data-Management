@@ -1,7 +1,3 @@
-library(ProjectTemplate)
-load.project()
-
-
 Leaving_SurveyDF = data.frame(Reasons = unique(cyber.security.7.leaving.survey.responses$leaving_reason, incomparables= FALSE))
 
 Reasons.Function = function(x){

@@ -1,10 +1,4 @@
-library(ProjectTemplate)
-load.project()
-
 #Making the dataframe
-y = cyber.security.7.question.response 
-
-
 Results.function = function(y){
 Answers= y %>% filter(correct == "true") %>% count(learner_id) %>% arrange(-n)
 #how many correct answers for each learner ID?

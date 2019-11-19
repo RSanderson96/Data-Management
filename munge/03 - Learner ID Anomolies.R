@@ -1,6 +1,3 @@
-library(ProjectTemplate)
-load.project()
-
 #1) How Many Times For Each Course Does a Learner Start a Section, But Not finish It?
 
 #1a)How many times per learner?
@@ -95,11 +92,3 @@ U7
 
 #See number that drop at the start
 
-
-
-
-# A tibble: 1,311 x 2
-
-cyber.security.7.step.activity %>% filter(learner_id == "20e6ec35-0f50-4819-9c2e-d1851fd54638")
-
-# A tibble: 5 x 6

@@ -1,7 +1,3 @@
-
-library(ProjectTemplate)
-load.project() 
-
 Filter = StepActivity7 %>% filter(last_completed_at !="")
 StepActivityFilter=data.frame(Filter)
 
