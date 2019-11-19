@@ -2,8 +2,6 @@ library(ProjectTemplate)
 load.project()
 
 
-
-
 Leaving_SurveyDF = data.frame(Reasons = unique(cyber.security.7.leaving.survey.responses$leaving_reason, incomparables= FALSE))
 
 Reasons.Function = function(x){
@@ -29,6 +27,20 @@ Combined_Leaving_Survey = cbind(Leaving_SurveyDF, Reasons4, Reasons5, Reasons6, 
 
 Total = c(sum(Reasons4), sum(Reasons5), sum(Reasons6), sum(Reasons7))
 
-Combined_Leaving_Survey = rbind(Combined_Leaving_Survey, Total )
+Combined_Leaving_SurveyTotal = rbind(Combined_Leaving_Survey, Total )
 
+One = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
+OneGraph = One + geom_col (aes(x = Reasons, y = Reasons4))
+OneGraph
 
+Two = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
+TwoGraph = Two + geom_col (aes(x = Reasons, y = Reasons5))
+TwoGraph
+
+Three = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
+ThreeGraph = Three + geom_col (aes(x = Reasons, y = Reasons6))
+OneGraph
+
+Four = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
+FourGraph = Four + geom_col (aes(x = Reasons, y = Reasons7))
+FourGraph
