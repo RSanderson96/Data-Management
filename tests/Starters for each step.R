@@ -65,7 +65,7 @@ CourseS7Graph
 
 #Proportion graph
 
-StartProp = ggplot (data = StartersDF,aes (x = Step, y = Total))
+StartProp = ggplot (data = StartersDF, aes (x = Step, y = Total))
 CourseSP1Graph = StartProp +geom_point(aes( x= Step, y = Run_S1/(Cohort_Summaries$Enrolments[1]), colour = "Course Run 1"))
 CourseSP2Graph = CourseSP1Graph +geom_point(aes( x= Step, y = Run_S2/(Cohort_Summaries$Enrolments[2]), colour = "Course Run 2"))
 CourseSP3Graph = CourseSP2Graph +geom_point(aes( x= Step, y = Run_S3/(Cohort_Summaries$Enrolments[3]), colour = "Course Run 3"))
@@ -77,3 +77,4 @@ CourseSP7Graph = CourseSP6Graph +geom_point(aes( x= Step, y = Run_S7/(Cohort_Sum
 CourseSP7Graph
 
 
+        

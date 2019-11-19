@@ -27,7 +27,13 @@ Combined_Leaving_Survey = cbind(Leaving_SurveyDF, Reasons4, Reasons5, Reasons6, 
 
 Total = c(sum(Reasons4), sum(Reasons5), sum(Reasons6), sum(Reasons7))
 
+
 Combined_Leaving_SurveyTotal = rbind(Combined_Leaving_Survey, Total )
+Combined_Leaving_SurveyTotal$Reasons = c("Other", 
+                                    "The Course required more time Than I Realised", 
+                                    "I prefer not to say"," I don't have enough time",
+                                    "The Course was too hard", "The Course wasn't what I expected", 
+                                    "The Course won't help me reach my goals", "The Course was too easy", "Total")
 
 One = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
 OneGraph = One + geom_col (aes(x = Reasons, y = Reasons4))

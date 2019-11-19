@@ -1,6 +1,15 @@
 library(ProjectTemplate)
 load.project() 
-
+Video3 = cyber.security.3.video.stats
+Video4 = cyber.security.4.video.stats
+Video5 = cyber.security.5.video.stats
+Video6 = cyber.security.6.video.stats
+Video7 = cyber.security.7.video.stats
+cache("Video3")
+cache("Video4")
+cache("Video5")
+cache("Video6")
+cache("Video7")
 
 StepPosition = Video3$step_position #seperating columns for vectors
 V3Views = Video3$total_views
@@ -94,5 +103,18 @@ L7= L6 + geom_point (aes (x=Step, y=Video7, colour = "Course Run 7"))
 L8 = L7 + geom_line (aes ( x=Step, y=DFViewsProportion$Average, colour = "Average"))
 
 L8
+ #adding question lines?
 
- 
+  StepActivity = cyber.security.7.question.response
+  Questions = unique(StepActivity$quiz_question, incomparables = FALSE)
+  
+  Steps=c((StepActivity$week_number)+((StepActivity$step_number)/100)) #acknowledging data complication
+  StepActivity = cbind(StepActivity, Steps) #editing the data with the new column
+  S= unique(StepActivity$Steps, incomparables = FALSE) #list the unique steps
+  
+L9 = L8 + geom_vline(xintercept = (S[1]), (aes (colour = "red")))
+L10 = L9 + geom_vline(xintercept = (S[2]), (aes (colour = "red")))
+L11 = L10 + geom_vline(xintercept = (S[3]), (aes (color = "red")))
+L12 = L11 + geom_vline(xintercept = (S[4]), (aes (color = "red")))
+L13 = L12 + geom_vline(xintercept = (S[5]), (aes (color = "red")))
+L13

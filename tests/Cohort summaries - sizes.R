@@ -52,4 +52,6 @@ VideoSteps = c(0,0,13,13,13,13,13)
 
 Cohort_Summaries = cbind(Cohort_Summaries, VideoSteps)
 
-Cohort_Summaries = Cohort_Summaries%>% rename(Enrolments=Entries,Number_of_Steps= Steps_Vector, Number_of_Video_Steps = VideoSteps)
+Cohort_Summaries_Full = Cohort_Summaries%>% rename(Enrolments=Entries,Number_of_Steps= Steps_Vector, Number_of_Video_Steps = VideoSteps)
+
+cache("Cohort_Summaries_Full")

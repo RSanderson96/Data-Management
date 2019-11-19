@@ -48,16 +48,14 @@ C7 = C6 + geom_point(aes(x=Question, y=Course7, colour = "Course7"))
 C7
 
 Correct = within(CorrectDF, rm(Question, Average))
-
-CorrectVec = as.vector(t(Correct))
-
+CorrectVec = as.vector(as.matrix(Correct))
 Course = rep(1:7, each = 22)
-
 BoxDF = data.frame(Course = Course, Score = CorrectVec)
-
 Box = ggplot(data = BoxDF, x = Course, y = Score)
 B1 = Box + geom_boxplot(aes(group = Course, x = Course, y = Score))
 B1
+
+
 boxplot(CorrectDF$Course1, CorrectDF$Course2, CorrectDF$Course3, CorrectDF$Course4, CorrectDF$Course5, CorrectDF$Course6, CorrectDF$Course7,
         main = "Comparison of the results for each course",
         names = c("Course 1", "Course 2", "Course3", "Course 4", "Course 5", "Course 6", "Course 7"),
