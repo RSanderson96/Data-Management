@@ -40,7 +40,7 @@ C5 = C4 + geom_point(aes(x=Question, y=Course5, colour = "Course5"))
 C6 = C5 + geom_point(aes(x=Question, y=Course6, colour = "Course6"))
 C7 = C6 + geom_point(aes(x=Question, y=Course7, colour = "Course7"))
 C8 = C7 +labs(title="The Number of Correct Answers for Each Question",
-        x ="Question", y = "Number of Correct Answers") + theme(axis.text.x=element_blank())
+        x ="Question", y = "Number of Correct Answers") + theme(axis.text.x=element_blank()) + theme(axis.text.x  = element_text(angle=90, size=10))
 
 C8
 ```

@@ -1,0 +1,403 @@
+---
+title: "The Anomaly of Finishers"
+author: "Rachael Sanderson"
+date: "22 November 2019"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+library(ProjectTemplate)
+
+```
+
+```{r load_project, include = FALSE}
+load.project()
+
+```
+
+##Business Objectives
+So far this analysis has considered the variation in step finishers, and the association of video usage and attainment. However, there has been limited consideration of the noticed limitations of the data sets used; it is important to investigate this, to ensure that the business - based conclusions are worth following. 
+As was acknowledged, the first section observed that certain steps have a greater number of non-finishers than the step following them, implying that 'not finishing' a step is not the equivalent to not completing further steps. Following this realisation, an alternative route of analysis was considered, focusing on learner IDs and the number of times they are recorded as 'non-finishing'. It is important to recognise how many people do not finish the course, to ensure the success of the teaching is evaluated within appropriate parameters. 
+
+##The Leavers Survey
+
+###Data Selection and Preparation
+
+This analysis begins with the leavers survey data to consider non-finishers, assuming it is the 'most accurate' because it was filled out by the participant - all these individuals have given a reason for not completing the course, and so these figures are the minimum number of people that did not finish it. These files also show the reasons people gave for not completing the course.
+
+The data was formated below, to reflect how many people gave each reason, for each course run:
+
+```{R Leaving, warnings = FALSE}
+Leaving_SurveyDF = data.frame(Reasons = unique(cyber.security.7.leaving.survey.responses$leaving_reason, incomparables= FALSE))
+Reasons.Function = function(x){
+LeavingSurvey = x
+R = unique(LeavingSurvey$leaving_reason, incomparables = FALSE)
+L = length(R)
+
+Reasons_Left = vector()
+for(i in 1:L){
+Reasons = LeavingSurvey%>% filter(leaving_reason == R[i])
+Total = nrow(Reasons)
+Reasons_Left[i] = Total}
+
+return(Reasons_Left)
+}
+Reasons4 =Reasons.Function(cyber.security.4.leaving.survey.responses)
+Reasons5 =Reasons.Function(cyber.security.5.leaving.survey.responses)
+Reasons6 =Reasons.Function(cyber.security.6.leaving.survey.responses)
+Reasons7 =Reasons.Function(cyber.security.7.leaving.survey.responses)
+Combined_Leaving_Survey = cbind(Leaving_SurveyDF, Reasons4, Reasons5, Reasons6, Reasons7)
+Combined_Leaving_Survey$Reasons = c("Other", 
+                                    "The Course required more time Than I Realised", 
+                                    "I prefer not to say"," I don't have enough time",
+                                    "The Course was too hard", "The Course wasn't what I expected", 
+                                    "The Course won't help me reach my goals", "The Course was too easy")
+
+```
+```{R Total, echo = FALSE, warnings = FALSE}
+Total = c(sum(Reasons4), sum(Reasons5), sum(Reasons6), sum(Reasons7))
+
+Combined_Leaving_SurveyTotal = rbind(Combined_Leaving_Survey, Total )
+Combined_Leaving_SurveyTotal$Reasons = c("Other", 
+                                    "The Course required more time Than I Realised", 
+                                    "I prefer not to say"," I don't have enough time",
+                                    "The Course was too hard", "The Course wasn't what I expected", 
+                                    "The Course won't help me reach my goals", "The Course was too easy", "Total") #correcting punctuation errors
+```
+
+This produces the following data frame for Course runs 4 - 7, the only ones questioned. Additionally, the bottom row shows the number of people classified as 'leaving' the course, according to the presence of their survey responses.
+
+```{R FinishDF, echo = FALSE, width = 10}
+Combined_Leaving_SurveyTotal
+```
+###Data Exploration
+
+These can be visualised in the following graphs:
+
+```{R Survey_Graphs4, echo = FALSE, fig.width = 14}
+Plot = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
+Run4 = Plot + geom_col (aes(x = Reasons, y = Reasons4, fill = Reasons)) + theme(axis.text.x=element_blank())
+Run4lab = Run4+ labs(title = "Reasons for Students Leaving: Course Run 4", x = "Reasons", y= "Number of Students")
+Run4lab 
+```
+```{R Survey_Graphs5, echo = FALSE, fig.width = 12}
+Plot = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
+Run5 = Plot + geom_col (aes(x = Reasons, y = Reasons5, fill = Reasons)) + theme(axis.text.x=element_blank())
+Run5lab = Run5+ labs(title = "Reasons for Students Leaving: Course Run 5", x = "Reasons", y= "Number of Students")
+Run5lab
+```
+```{R Survey_Graphs6, echo = FALSE, fig.width = 12}
+Plot = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
+Run6 = Plot + geom_col (aes(x = Reasons, y = Reasons6, fill = Reasons)) + theme(axis.text.x=element_blank())
+Run6lab = Run6+ labs(title = "Reasons for Students Leaving: Course Run 6", x = "Reasons", y= "Number of Students")
+Run6lab
+```
+```{R Survey_Graphs7, echo = FALSE, fig.width = 12}
+Plot = ggplot(data = Combined_Leaving_Survey, aes(x = Reasons, y = Total))
+Run7 = Plot + geom_col (aes(x = Reasons, y = Reasons7, fill = Reasons)) + theme(axis.text.x=element_blank())
+Run7lab = Run7+ labs(title = "Reasons for Students Leaving: Course Run 7", x = "Reasons", y= "Number of Students")
+Run7lab
+```
+
+
+Overall, the courses vary as to which has the most common reason for an individual to leave the course; overall, the exploration down this route is limited because the survey has only been run four times. More information would be required to make a more certain decision.
+
+##How many times are individual IDs recorded as non-finishers?
+
+###Data Selection and Preparation
+This analysis returned to the "Step Activity" files, to allow a comparison of the 'uncompleted' steps compared to the number of registered non-finishers.
+
+The initial analysis focused on how many times people were recorded as not finishing a step using the following formula
+
+```{R Non_finish}
+Incomplete_Quantity= cyber.security.7.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+```
+
+
+This created a data frame that showed how many times each learner ID failed to complete a step:
+
+```{R ShowDF, echo = FALSE}
+Incomplete_Quantity
+```
+
+Following from this, it is possible to display how many individual IDs had non - finishing steps;
+
+```{R DataFrames, include=FALSE}
+Incomplete_Quantity1= cyber.security.1.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity2= cyber.security.2.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity3= cyber.security.3.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity4= cyber.security.4.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity5= cyber.security.5.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity6= cyber.security.6.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+Incomplete_Quantity7= cyber.security.7.step.activity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+```
+
+
+```{R Run_Non_Finish, echo = FALSE, fig.width = 6}
+IncompleteDF = data.frame( Course = 1:7, N = c(nrow(Incomplete_Quantity1), nrow(Incomplete_Quantity2),
+nrow(Incomplete_Quantity3),nrow(Incomplete_Quantity4), nrow(Incomplete_Quantity5),nrow(Incomplete_Quantity6),
+nrow(Incomplete_Quantity7)))
+
+IncompleteDF
+```
+
+###Data Exploration
+
+The final figures from this route of analysis are distinctively different to the number of survey responses provided in the leaver analysis;
+
+```{R Show_totals, echo = FALSE, fig.width = 6}
+
+Total = c(sum(Reasons4), sum(Reasons5), sum(Reasons6), sum(Reasons7))
+
+Total_Leavers = data.frame(Course_run = c(4:7), Total = Total )
+
+Total_Leavers
+```
+
+In comparing these two datasets, the flaws in the information provided are visible; there is either a very poor uptake of individuals completing the survey upon finishing, or there is a large number of students not complying with the technical layout of the course by not following the route to officially 'complete' a step once they have done so.
+
+##Are Non-Finishers completing the survey?
+
+###Data Preparation
+This led to a direct comparison of the datasets, using the learner IDs that are recorded in both files. As the survey was only completed for course runs 4 - 7, the analysis was limited to these groups. The learner IDs identified as having *any* incomplete steps were hence compared to this dataset, to consider if there are any matches. 
+
+This was investigated as part of an assessment of the validity of the data. The following formula was produced:
+
+```{R Anomalies}
+
+LeavingResponses.function = function(x,y) { #x = step activity, y = leaver responses
+
+Incomplete_Quantity= x %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n) #filter non-completed
+
+#Are these learner IDs in the leaving response file?
+
+LeaversDF = merge(y, Incomplete_Quantity, by = "learner_id", all=TRUE) #make a large data frame of leaver responses and non-complete
+
+#how many have a reason and a not completed?
+
+LeaversDF[is.na(LeaversDF)] <- 0 #beware warnings will appear!
+
+Both = LeaversDF %>% filter(n != 0) %>% filter(id != 0) %>% arrange (-n)
+NnotR = LeaversDF %>% filter(n != 0) %>% filter (id == 0) %>% arrange(-n)
+RnotN = LeaversDF %>% filter(n==0) %>% filter (id != 0) 
+
+ReasonAndIncomplete = nrow(Both)
+IncompleteNoReason = nrow(NnotR)
+ReasonNotIncomplete = nrow(RnotN)
+
+Incomplete = c(nrow(Both),nrow(NnotR), nrow(RnotN))
+
+return(Incomplete)}
+```
+
+
+This produced the following data frame from all possible data sets:
+
+```{R See_DF, echo = FALSE, fig.width = 10}
+DF = data.frame(Both = Incomplete4 [1], Incomplete_No_Reason = Incomplete4 [2], Reason_Not_Incomplete = Incomplete4 [3])
+IncompleteReasonsDF = rbind(DF,Incomplete5, Incomplete6, Incomplete7)
+IncompleteReasonsDF = cbind(c(4:7), IncompleteReasonsDF)
+IncompleteReasonsDF = IncompleteReasonsDF%>% rename(Course_Run = "c(4:7)")
+Total = c(sum(Reasons4), sum(Reasons5), sum(Reasons6), sum(Reasons7))
+Total_Leavers = data.frame(Course_run = c(4:7), Total = Total )
+IncompleteReasonsDF = cbind(IncompleteReasonsDF, Total_Leavers$Total )
+IncompleteReasonsDF = IncompleteReasonsDF%>% rename(Total_Survey_Responses = "Total_Leavers$Total")
+IncompleteReasonsDF = cbind(IncompleteReasonsDF, c(nrow(Incomplete_Quantity4), nrow(Incomplete_Quantity5),nrow(Incomplete_Quantity6),
+                                                   nrow(Incomplete_Quantity7)))
+IncompleteReasonsDF = IncompleteReasonsDF = IncompleteReasonsDF%>% rename(Total_Unfinished = "c(nrow(Incomplete_Quantity4), nrow(Incomplete_Quantity5), nrow(Incomplete_Quantity6), ")
+
+IncompleteReasonsDF
+```
+
+
+The dataframe constructed allows a comparison of the information included within different datasets. Overall, the following information can be understood:
+
+```{R Percentages, echo = FALSE, fig.width = 6}
+QueriesDF = data.frame("Course Run" = 4:7, "Unfinished Steps, No Survey" = (IncompleteReasonsDF$Incomplete_No_Reason/IncompleteReasonsDF$Total_Unfinished)*100, "Survey, No Unfinished Steps" = (IncompleteReasonsDF$Reason_Not_Incomplete/IncompleteReasonsDF$Total_Survey_Responses)*100)
+
+QueriesDF
+
+
+```
+
+###Data Exploration
+
+The Majority of people who do have an unfinished step do not complete the leavers survey; that was fairly obvious in the difference in implied drop-out totals. More interestingly, for each year approximately 50% have officially left the course, yet have no unfinished step. This may mean that they do not start a new one, but also means that there is no clear point in the step activity where someone has clearly left the course. Over 4 runs of the course, it was decided not to graph this data - the tables are relatively self explanitory for the depth of and timescale to undertake this specific exploration.
+
+##Considering a Specific Group
+
+###Data Preparation
+The first group of non-finishers considered were those that only had one incident of an infinished step; these are individuals who are more likely to have not continued, making it a more accurate statistic for reflections on rate of dropout.
+
+Firstly, a function was made to identify these learners, before creating a data frame that matched these individuals to their only unfinished step:
+
+```{R SingleUnfinish.Function}
+
+ SingleUnfinish.Function=function(x){
+   StepActivity = x
+   Incomplete_Quantity= StepActivity %>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+   Incomplete_Single = Incomplete_Quantity%>% filter(n == 1)
+   L = nrow(Incomplete_Single) #making the DF of "one step unfinished"
+   
+   Steps=c((StepActivity$week_number)+((StepActivity$step_number)/100)) #acknowledging data complication
+   StepActivity = cbind(StepActivity, Steps) #correcting the steps confusion
+   
+   Learner = vector() #make the vector
+   for(i in 1:L){ 
+   ID = (StepActivity %>% filter(learner_id == Incomplete_Single$learner_id[i])%>% filter(last_completed_at == ""))
+    #Pick out the ID from the dataframe that has been identified as only having one stage unfinished
+   Learner [i]= ID$Steps} #Which step was unfinished?
+   LearnerSingleDF = data.frame(Learner = Incomplete_Single$learner_id, Step = Learner)
+   UnfinishedSteps = LearnerSingleDF%>% count(Step) %>% arrange(-n)
+   return(UnfinishedSteps)
+ }
+
+```
+
+
+This formula was applied to each step activity file, with the final amounts pulled into one singluar data frame.
+
+```{R Making_Dataframes, include=FALSE, warning = FALSE}
+LargeDF = merge.data.frame(Single1, Single2, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_1 = n.x, Run_2 = n.y )
+LargeDF = merge.data.frame(LargeDF, Single3, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_3 = n)
+LargeDF = merge.data.frame(LargeDF, Single4, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_4 = n)
+LargeDF = merge.data.frame(LargeDF, Single5, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_5 = n)
+LargeDF = merge.data.frame(LargeDF, Single6, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_6 = n)
+LargeDF = merge.data.frame(LargeDF, Single7, by = "Step", all=TRUE)
+LargeDF = LargeDF%>% rename(Run_7 = n)
+LargeDF[is.na(LargeDF)] <- 0
+LargeDF
+```
+
+
+###Data Exploration
+
+The contents of the dataframe was used to produce the following graph:
+
+```{R UnfinishedGraph, echo = FALSE}
+U = ggplot(data = LargeDF, aes(x = Step, y=Total))
+U1 = U + geom_point (aes(x = Step, y=Run_1, colour = "Course1"))
+U2 = U1 + geom_point (aes(x = Step, y=Run_2, colour = "Course2"))
+U3 = U2 + geom_point (aes(x = Step, y=Run_3, colour = "Course3"))
+U4 = U3 + geom_point (aes(x = Step, y=Run_4, colour = "Course4"))
+U5 = U4 + geom_point (aes(x = Step, y=Run_5, colour = "Course5"))
+U6 = U5 + geom_point (aes(x = Step, y=Run_6, colour = "Course6"))
+U7 = U6 + geom_point (aes(x = Step, y=Run_7, colour = "Course7"))
+
+U7
+
+```
+
+This graph shows a clear decline at the start, implying that a large number of people begin the early steps, and neglect the rest of the course. 
+
+##An Indication of Course Engagement?
+
+This next section will consider whether not completing steps means a lack of course engagement, by considering whether an individual not completing a step (potentially therefore not completing the required amount of teaching) has a lower score on the questions they complete.
+
+###Data Preparation
+
+Firstly, a formula was produced to compare the number of unfinished steps by a specific learner ID, and their engagement with the quiz section in the course;
+
+```{R Unfinished_Formula}
+UnfinishLeaner.function = function(x,y){
+  
+  Incomplete_Quantity = x%>% filter(last_completed_at == "") %>% count(learner_id) %>% arrange(-n)
+  #Filter: Number of non-finishes by learner
+
+  Count_Unfinished = (merge(y, Incomplete_Quantity, by = "learner_id"))%>%filter(n != "")
+  #dataframe = Question responses & counts the number of unfinished steps for each learner ID
+  
+  Answers= y %>% filter(correct == "true") %>% count(learner_id) %>% arrange(-n)
+  #how many correct answers for each learner ID?
+  Attempts =y %>% count(learner_id) %>% arrange(-n)
+  #How many attempts for each learner ID?
+  
+  #Now make the data frame that has only unique learner IDS, and add columns for answers and attempts:
+  Unfinished = data.frame(learner_id = Count_Unfinished$learner_id, Unfinished = Count_Unfinished$n)
+  Unfinished = unique.data.frame(Unfinished)
+  UnfinishedQuestions = merge(Unfinished,Answers, by = "learner_id", all = TRUE)
+  UnfinishedQuestions = UnfinishedQuestions%>% rename(Correct_Answers = n)
+  UnfinishedQuestions = merge(UnfinishedQuestions,Attempts, by = "learner_id", all = TRUE)
+  UnfinishedQuestions = UnfinishedQuestions%>% rename(Quant_Attempts = n)
+  
+  #Calculate the proportion of correct answers per learner ID, and add this to the existing dataframe:
+  ProportionCorrect = (UnfinishedQuestions$Correct_Answers/UnfinishedQuestions$Quant_Attempts)*100
+  UnfinishedQuestions = cbind(UnfinishedQuestions, ProportionCorrect)
+  #remove 'NA' responses for making graphs
+  UnfinishedQuestions[is.na(UnfinishedQuestions)] <- 0
+  #Final result: Completed data frame
+  return(UnfinishedQuestions)}
+```
+
+The final result is a data frame that for each ID shows the number of unfinished steps, the number of question attempts, the number of correct answers, and the proportion of correct answers from questions attempted.
+
+###Data Exploration
+This selection of data was the most interesting to explore, particularly because it links to the business goal of attainment, and hence the last few graphs were developed for analysis. 
+
+1): The Number of Attempted Steps
+
+```{R Attempts, echo = FALSE}
+At = ggplot(data = Unfinished1, aes(x = Unfinished, y = Quant_Attempts))
+At1 = At + geom_point(aes(x = Unfinished, y = Quant_Attempts, colour = "Course 1"))
+At2 = At1 + geom_point(data = Unfinished2,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course2")))
+At3 = At2 + geom_point(data = Unfinished3,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course3")))
+At4 = At3 + geom_point(data = Unfinished4,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course4")))
+At5 = At4 + geom_point(data = Unfinished5,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course5")))
+At6 = At5 + geom_point(data = Unfinished6,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course6")))
+At7 = At6 + geom_point(data = Unfinished7,(aes( x = Unfinished, y = Quant_Attempts, colour = "Course7")))
+At8 = At7 + labs( title = "The Number of Attempted or Unfinished Steps for Each Learner ID", x = " Number of Unfinished Steps", y = " Number of Attempted Questions")
+At8
+```
+
+As can be expected, the less unfinished steps often means the individual has completed more questions - simply because they have finished more of the course! However, the presence of scatter shows the potential to attempt questions without finishing a large number of steps; this implies another influence within the data.
+
+2): The Number of Correct Answers
+
+```{R Answers, echo  = FALSE}
+An = ggplot(data = Unfinished1, aes(x = Unfinished, y = Correct_Answers))
+An1 = An + geom_point(aes(x = Unfinished, y = Correct_Answers, colour = "Course 1"))
+An2 = An1 + geom_point(data = Unfinished2,(aes( x = Unfinished, y = Correct_Answers, colour = "Course2")))
+An3 = An2 + geom_point(data = Unfinished3,(aes( x = Unfinished, y = Correct_Answers, colour = "Course3")))
+An4 = An3 + geom_point(data = Unfinished4,(aes( x = Unfinished, y = Correct_Answers, colour = "Course4")))
+An5 = An4 + geom_point(data = Unfinished5,(aes( x = Unfinished, y = Correct_Answers, colour = "Course5")))
+An6 = An5 + geom_point(data = Unfinished6,(aes( x = Unfinished, y = Correct_Answers, colour = "Course6")))
+An7 = An6 + geom_point(data = Unfinished7,(aes( x = Unfinished, y = Correct_Answers, colour = "Course7")))
+An8 = An7 + labs(title = "The Average Number of Correct Answers compared to the Number of Unfinished steps", x = "Number of Unfinished Steps per Learner", y = "Number of Correct Answers Per Learner") 
+An8
+
+```
+
+This graph is very similar to the previous one, although with greater scatter throughout. There does not appear to be a relationship, or at least a dependency, between the two factors. Once again, the increase in unfinished steps also does not necessarily cause a decrease in attainment.
+
+3): The Proportion of Correct Answers
+
+```{R proportion, echo = FALSE}
+P = ggplot(data = Unfinished1, aes(x = Unfinished, y = ProportionCorrect))
+P1 = P + geom_point(aes(x = Unfinished, y = ProportionCorrect, colour = "Course 1"))
+P2 = P1 + geom_point(data = Unfinished2,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course2")))
+P3 = P2 + geom_point(data = Unfinished3,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course3")))
+P4 = P3 + geom_point(data = Unfinished4,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course4")))
+P5 = P4 + geom_point(data = Unfinished5,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course5")))
+P6 = P5 + geom_point(data = Unfinished6,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course6")))
+P7 = P6 + geom_point(data = Unfinished7,(aes( x = Unfinished, y = ProportionCorrect, colour = "Course7")))
+P8 = P7 + labs(title = "The Proportion of Correct Answers compared to the Number of Unfinished Steps", x = "Number of Unfinished Steps", y = "Proportion of Correct Answers") 
+P8
+
+```
+
+Upon forming the third graph, it is clear the key element that all of these models have in common is their broad scatter. Not 'completing' a step does not mean they are not engaging with the class, as IDs with over 50 unfinished steps may go on to still score relatively highly in the quiz questions. Therefore, the statistic of 'last_completed' is flawed, potentially due to technological issues that do not record when an individual has finished their step.
+
+##Evaluation of Models and Data Manipulation
+
+This section of the CRISP-DM cycle is considerably more exploratory, and less of a linear process. Whilst there is limited provided with regards to answers, there has been realised potential to investigate and query the data further. 
+

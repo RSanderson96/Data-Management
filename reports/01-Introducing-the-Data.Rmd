@@ -20,11 +20,11 @@ load.project()
 
 ```
 
-##Business Objectives
+###Business Objectives
 
 The data analysis was instigated as an attempt to apply data routinely collected about students to understand their engagement, with the attention to apply the findings to improve student attainment. The course being analysed was an online course about cyber security; the data hence records the students' access to files at each step, scores upon the completion of quiz sections, enrollment information, and the overall use of videos within the course cohort. This information will be compiled to form a reproducable pipeline that can be applied within the business. 
 
-##The Data
+###The Data
 
 Data has been provided for 7 runs of the following course, summarised below;
 
@@ -82,21 +82,21 @@ Cohort_Summaries = Cohort_Summaries%>% rename(Enrolments=Entries,Number_of_Steps
 Cohort_Summaries
 ```
 
-##An introduction to the files provided
+###An introduction to the files provided
 
-###*Step Activity*
+####*Step Activity*
 This was the most prominant data set used within the analysis, as it shows the start times and finish times for each step, seperated by each individual learner ID. This data required manipulation to correct the 'step numbers', as Step 1.1 is at risk of being matched to 1.10, and so this will be done before every application. Additionally, use of this data revealed its flaws as a data set; an unfinished step was not necessarily an unfinished course - this was consequentially investigated in one of the analysis runs. 
 
-###*Leaving Survey Responses*
+####*Leaving Survey Responses*
 This data contained the responses of all individuals who left the course and responded to the survey that enquired why. This is potentially valuable information, as it provides an insight into why individuals feel they cannot cope, and where the course should be improved. This data is only included for courses 4 - 7, and was analysed independently as well as being applied to support other analyses once gaps and complications were realised, as it is observed to be a potentially incomplete sample. 
 
-###*Question Responses*
+####*Question Responses*
 This data shows the quiz answers and so scores for each learner ID within the course. As the quiz steps were the same throughout the data sets, and this data can be used for all courses, this was a valuable data set used to compare attainment for each run of the course to consider if there was improvement at each stage.
 
-###*Video Statistics*
+####*Video Statistics*
 This data file shows the usage of each video, based on total views, % watched, country of viewer and method of viewer. This data file was mostly used within the analysis to consider the cohort interaction with a specific teaching method. As this was only introduced during Course Run 3, hypothesis tests could also be run to see if there is a correlation to a significant change in results upon the introduction of video.
 
-###*Enrolments*
+####*Enrolments*
 This file has the most potential to provide information about the student's backgrounds; however, it is incomplete as it contains individuals who are identified as enrolled yet their information is missing. These gaps can be shown below;
 
 ```{R Unknowns, include = FALSE, warning = FALSE}
@@ -139,15 +139,17 @@ Education = c(Unknowns1 [3], Unknowns2 [3], Unknowns3 [3], Unknowns4[3], Unknown
 
 dfunknowns = data.frame(Run, Gender, Country, Education)
 
-U=ggplot(data=dfunknowns, aes(x=Run, y= Proportion_of_Unknowns)) 
-U1 = U + geom_point (aes (x=Run, y=Gender, colour = "Gender"))
-U2 = U1 + geom_point (aes (x=Run, y= Country, colour = "Country"))
-U3Graph = U2 + geom_point (aes (x=Run, y=Education, colour = "Education", size = 1))
-Scaled = U3Graph + ylim(0.5,1)
+U=ggplot(data=dfunknowns, aes(x=Run, y= Gender)) 
+U1 = U + geom_point (aes (x=Run, y=Gender, colour = "Gender", size = 1))
+U2 = U1 + geom_point (aes (x=Run, y= Country, colour = "Country", size = 1))
+U3Graph = U2 + geom_point (aes (x=Run, y=Education, colour = "Education", size=1)) + theme(text = element_text(size=20)) + labs( title = "The Percentage of Missing Information for Each Course Run", x = "Course Run", y = "% of Unknowns") + guides(size=FALSE) + theme(legend.text = element_text( size = 20))
+U4 = U3Graph+ ylim(0,1)
+
+Scaled = U3Graph + ylim(0.85,0.95)
  
 ```
 ```{R ShowUnknown, echo = FALSE, fig.width = 20, fig.height = 10}
-grid.arrange(U3Graph, Scaled, nrow = 2)
+grid.arrange(U4, Scaled, nrow = 2) 
 
 ```
 
@@ -156,12 +158,12 @@ The comparison of the two graphs shows the importance of scale within their desi
 This initial exploration shows that there are clear difficulties to do evaluations based on age, gender or education (as just three examples), as this information is missing for a large proportion of the samples. Therefore this data set was only used to contextualise each course analysis to quantify the number of enrolments, but could not be used for intricate data analysis.
 Additionally, the flaws with this data set encourage questions about the reliability of other data sets, due to the volume of missing information.
 
-###"Archetype Survey Responses and Weekly Sentiment survey responses*
+####*Archetype Survey Responses and Weekly Sentiment survey responses*
 
 This information was missing for stages 1 - x. This data outlines the types of learners within the course, seperated by user ID. This data was not used within the analysis as it is missing in its entirety for several course runs, and is missing for the majority of the rest, for example the Archetype Survey Responses only covered 175/2342 enrollments for Course Run 7.
 
 
-##Focus and Initial Hypotheses
+###Focus and Initial Hypotheses
 
 After reflecting on the available data, and the business objectives, the data pipeline will focus on the following objectives;
 
