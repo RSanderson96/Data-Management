@@ -1,0 +1,152 @@
+---
+title: "Using Provided Data for Business Objectives"
+author: "Rachael Sanderson"
+date: "19 November 2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+library(ProjectTemplate)
+
+```
+
+```{r load_project, include = FALSE}
+load.project()
+
+```
+##The Focus of Analysis
+
+- The Goals of Learning Analytics
+
+- Selecting the Data
+    - Quiz Questions
+    - Videos
+
+- Respresenting Findings
+    - Does the presentation of data influence its success in meeting the business goals?
+    
+##Analysing Attainment: The Percentage of Correct Answers by Cohort
+Option 1: Scatter Charts - Seeing each correct answer
+
+```{R CorrectGraph, fig.width = 8, echo = FALSE}
+Correct = ggplot(data=CorrectDF, x=Question, Y = Correct_Answers)
+C1 = Correct + geom_point(aes(x=Question, y=Course1, colour = "Course1"))
+C2 = C1 + geom_point(aes(x=Question, y=Course2, colour = "Course2"))
+C3 = C2 + geom_point(aes(x=Question, y=Course3, colour = "Course3"))
+C4 = C3 + geom_point(aes(x=Question, y=Course4, colour = "Course4"))
+C5 = C4 + geom_point(aes(x=Question, y=Course5, colour = "Course5"))
+C6 = C5 + geom_point(aes(x=Question, y=Course6, colour = "Course6"))
+C7 = C6 + geom_point(aes(x=Question, y=Course7, colour = "Course7"))
+C8 = C7 +labs(title="The Number of Correct Answers for Each Question",
+        x ="Question", y = "Number of Correct Answers") + theme(axis.text.x=element_blank())
+
+C8
+```
+
+##Analysing Attainment: The Percentage of Correct Answers by Cohort
+Option 2: BoxPlots - Summarising the course
+
+```{R Question_Box, echo= FALSE, fig.width=8}
+Correct = within(CorrectDF, rm(Question, Average))
+CorrectVec = as.vector(as.matrix(Correct))
+Course = rep(1:7, each = 22)
+BoxDF = data.frame(Course = Course, Score = CorrectVec)
+
+Box = ggplot(data = BoxDF, x = Course, y = Score)
+B1 = Box + geom_boxplot(aes(group = Course, x = Course, y = Score, fill = factor(Course)))
+B2 = B1 + labs(title="The Average Number of Correct Answers Throughout a Course Run",
+        x ="Course", y = "Percentage of Correct Answers (%)")
+
+B2
+```
+
+ - Overall reflections
+    - Findings
+    - Visuals
+
+##The Use of Videos: How many views did each video have?
+
+``` {R Views_Dataframe, echo = FALSE}
+DFViews
+
+```
+
+##The Use of Videos: Scatter & Line
+
+```{R Scatter, include = FALSE}
+Graph=ggplot (data = DFViews, aes (x = Step, y= Total.Video.Views))
+g3 = Graph + geom_point(aes(x = Step, y=Video3, colour = "Course Run 3")) #adding each course run
+g4 = g3+ geom_point (aes (x=Step, y=Video4, colour = "Course Run 4"))
+g5 = g4+ geom_point (aes (x=Step, y=Video5, colour = "Course Run 5")) 
+g6 = g5+ geom_point (aes (x=Step, y=Video6, colour = "Course Run 6"))
+g7= g6+ geom_point (aes (x=Step, y=Video7, colour = "Course Run 7"))
+
+g8 = g7 + geom_line (aes(x=Step, y=Mean, colour = "Average Views")) #adding the average line
+g9 = g8 +labs(title="Total Viewings of each Video",
+        x ="Video Step", y = "Total Views")
+g9
+```
+
+```{R Line, include = FALSE}
+Line=ggplot (data = DFViews, aes (x = Step, y= Views))
+L3 = Line + geom_line(aes(x = Step, y=Video3, colour = "Course Run 3")) #adding each run
+L4 = L3+ geom_line (aes (x=Step, y=Video4, colour = "Course Run 4"))
+L5 = L4+ geom_line (aes (x=Step, y=Video5, colour = "Course Run 5")) 
+L6 = L5+ geom_line (aes (x=Step, y=Video6, colour = "Course Run 6"))
+L7= L6+ geom_line (aes (x=Step, y=Video7, colour = "Course Run 7"))
+L8 = L7 + geom_line (aes(x=Step, y=Mean, colour = "Average Views")) #adding the average line
+L9 = L8 +labs(title="Total Viewings of each Video",
+        x ="Video Step", y = "Total Views")
+L9
+
+```
+
+```{R Both, echo = FALSE, fig.width = 8}
+grid.arrange(g9,L9, ncol = 2)
+
+```
+
+##The Use of Videos: Proportions
+```{R Proportion, echo = FALSE}
+
+Line=ggplot (data = DFViewsProportion, aes (x = Step, y= Video3)) #initial line coordinates
+
+L3 = Line + geom_point(aes(x = Step, y=Video3, colour = "Course Run 3")) #adding each run
+L4 = L3+ geom_point (aes (x=Step, y=Video4, colour = "Course Run 4"))
+L5 = L4+ geom_point (aes (x=Step, y=Video5, colour = "Course Run 5")) 
+L6 = L5+ geom_point (aes (x=Step, y=Video6, colour = "Course Run 6"))
+L7= L6 + geom_point (aes (x=Step, y=Video7, colour = "Course Run 7"))
+L8 = L7 + geom_line (aes ( x=Step, y=DFViewsProportion$Average, colour = "Average"))
+
+L8
+
+
+```
+
+##Merging the Videos and Questions
+
+- Comparing Steps
+```{R Question_Lines, echo = FALSE, warning = FALSE}
+ StepActivity = cyber.security.7.question.response
+Questions = unique(StepActivity$quiz_question, incomparables = FALSE)
+  
+Steps=c((StepActivity$week_number)+((StepActivity$step_number)/100)) #acknowledging data complication
+  StepActivity = cbind(StepActivity, Steps) #editing the data with the new column
+  S= unique(StepActivity$Steps, incomparables = FALSE) #list the unique steps
+  
+Q9 = L8 + geom_vline(xintercept = (S[1]), (aes (colour = "red")))
+Q10 = Q9 + geom_vline(xintercept = (S[2]), (aes (colour = "red")))
+Q11 = Q10 + geom_vline(xintercept = (S[3]), (aes (color = "red")))
+Q12 = Q11 + geom_vline(xintercept = (S[4]), (aes (color = "red")))
+Q13 = Q12 + geom_vline(xintercept = (S[5]), (aes (color = "red")))
+
+Q13
+
+```
+
+##Conclusion
+- Reflections: The observed trends of attainment and video usage 
+
+- Are the findings effectively translated?

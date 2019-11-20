@@ -1,0 +1,12 @@
+Within the tests file: All files of code that were copied/ cached to make the Markdown documents
+	1)
+	2)
+	3)
+
+
+Reports File:
+
+Cache File
+
+Munge Avoided - preventing a slow load to show formulas, expecially when the majority were included in the R MarkDown files for reproducible research.
+
